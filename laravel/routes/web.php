@@ -15,13 +15,13 @@
 //     return view('home');
 // });
 // この上下は同値
-Route::view('/', 'home');
+Route::view('/', 'home')->name('home');
 
 // Route::get('/contact', function () {
 //     return view('contact');
 // });
 
-Route::view('/contact', 'contact');
+Route::view('/contact', 'contact')->name('contact');
 
 // パラメーター名にハイフンは使えない
 // 複数のパラメータは左から右へ順にクロージャへ渡されるのでパラメータ名とクロージャで受ける引数名は一致しなくてもおｋ
@@ -43,4 +43,4 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
         'data' => $pages[$id],
         'welcome' => $welcomes[$welcome],
     ]);
-});
+})->name('blog-post');
