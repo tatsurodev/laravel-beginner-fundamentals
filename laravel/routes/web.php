@@ -15,17 +15,20 @@
 //     return view('home');
 // });
 // この上下は同値
-Route::view('/', 'home')->name('home');
+// Route::view('/', 'home')->name('home');
+
+Route::get('/', 'HomeController@home')->name('home');
 
 // Route::get('/contact', function () {
 //     return view('contact');
 // });
 
-Route::view('/contact', 'contact')->name('contact');
+Route::get('/contact', 'HomeController@contact')->name('contact');
 
 // パラメーター名にハイフンは使えない
 // 複数のパラメータは左から右へ順にクロージャへ渡されるのでパラメータ名とクロージャで受ける引数名は一致しなくてもおｋ
 // 任意パラメータは?をつけ、クロージャの引数でデフォルトを指定
+/*
 Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
     $pages = [
         1 => [
@@ -44,3 +47,7 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
         'welcome' => $welcomes[$welcome],
     ]);
 })->name('blog-post');
+*/
+
+// 上記ロジックをcontrollerへ移動
+Route::get('/blog-post/{id}/{welcome?}', 'HomeController@blogPost')->name('blog-post');
