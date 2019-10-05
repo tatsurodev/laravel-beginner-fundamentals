@@ -36,9 +36,12 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $blogPost = new BlogPost();
         // inputメソッドの第2引数はデフォルト値を指定、$request->titleでもおｋ
-        $title = $request->input('title', 'Draft title');
-        $content = $request->input('content', 'Draft content');
-        dd($title, $content);
+        $blogPost->title = $request->input('title', 'Draft title');
+        $blogPost->content = $request->input('content', 'Draft content');
+        $blogPost->save();
+
+        return redirect()->route('posts.show', ['post' => $blogPost->id]);
     }
 }
