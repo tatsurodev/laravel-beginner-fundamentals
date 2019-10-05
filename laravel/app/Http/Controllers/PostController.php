@@ -38,6 +38,10 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'title' => 'required|max:100',
+            'content' => 'required',
+        ]);
         $blogPost = new BlogPost();
         // inputメソッドの第2引数はデフォルト値を指定、$request->titleでもおｋ
         $blogPost->title = $request->input('title', 'Draft title');
