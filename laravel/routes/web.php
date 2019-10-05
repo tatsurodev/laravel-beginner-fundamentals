@@ -50,4 +50,7 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
 */
 
 // 上記ロジックをcontrollerへ移動
-Route::get('/blog-post/{id}/{welcome?}', 'HomeController@blogPost')->name('blog-post');
+// Route::get('/blog-post/{id}/{welcome?}', 'HomeController@blogPost')->name('blog-post');
+
+// onlyで使用するアクションのみ指定
+Route::resource('/posts', 'PostController')->only(['index', 'show']);
