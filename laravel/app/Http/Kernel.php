@@ -27,6 +27,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
+        // web.phpにあるrouteに適用されるmiddleware
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
