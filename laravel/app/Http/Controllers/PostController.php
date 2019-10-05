@@ -23,8 +23,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        // sessionの復元, session()->reflash()でもおｋ
+        // $request->session()->reflash();
         // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
         return view('posts.show', ['post' => BlogPost::findOrFail($id)]);
     }
@@ -42,6 +44,13 @@ class PostController extends Controller
         $blogPost->content = $request->input('content', 'Draft content');
         $blogPost->save();
 
+        // sessionでメッセージ格納
+        $request->session()->flash('status', 'Blog post was created!');
+        // 上下は同値
+        // session()->flash('status', 'Blog post was created!');
+
         return redirect()->route('posts.show', ['post' => $blogPost->id]);
+        // 上下は同値
+        // return redirect(route('posts.show', ['post' => $blogPost->id]));
     }
 }
