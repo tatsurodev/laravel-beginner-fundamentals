@@ -61,4 +61,13 @@ class PostController extends Controller
         // 上下は同値
         // return redirect(route('posts.show', ['post' => $blogPost->id]));
     }
+
+    public function edit($id)
+    {
+        $post = BlogPost::findOrFail($id);
+        return view('posts.edit', ['post' => $post]);
+    }
+
+    public function update()
+    { }
 }

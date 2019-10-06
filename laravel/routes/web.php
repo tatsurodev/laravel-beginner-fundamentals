@@ -53,4 +53,7 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
 // Route::get('/blog-post/{id}/{welcome?}', 'HomeController@blogPost')->name('blog-post');
 
 // onlyで使用するアクションのみ指定
-Route::resource('/posts', 'PostController')->only(['index', 'show', 'create', 'store']);
+// Route::resource('/posts', 'PostController')->only(['index', 'show', 'create', 'store', 'edit', 'update']);
+// 上下は同値
+// exceptで除外するactionを指定
+Route::resource('/posts', 'PostController')->except(['destroy']);
