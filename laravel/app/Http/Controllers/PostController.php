@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
+use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -36,13 +37,11 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    public function store(StorePost $request)
     {
-        $validatedData = $request->validate([
-            // bailでvalidationに失敗した時に残りの判定も停止できる
-            'title' => 'bail|min:5|required|max:100',
-            'content' => 'required|min:10',
-        ]);
+        // validatedでvalidation済のデータ取得
+        $validatedData = $request->validated();
+        dd($validatedData);
         $blogPost = new BlogPost();
         // inputメソッドの第2引数はデフォルト値を指定、$request->titleでもおｋ
         $blogPost->title = $request->input('title', 'Draft title');
