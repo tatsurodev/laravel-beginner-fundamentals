@@ -68,6 +68,14 @@ class PostController extends Controller
         return view('posts.edit', ['post' => $post]);
     }
 
-    public function update()
-    { }
+    public function update(StorePost $request, $id)
+    {
+        $post = BlogPost::findOrFail($id);
+        $validatedData = $request->validated();
+        // 既にあるinstanceに対するmass assignmentはfill methodを使用
+        $post->fill($validatedData);
+        $post->save();
+        $request->session()->flash('status', 'Blog post was updated!');
+        return redirect()->route('posts.show', ['post' => $post->id]);
+    }
 }
