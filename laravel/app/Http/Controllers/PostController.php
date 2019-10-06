@@ -41,12 +41,16 @@ class PostController extends Controller
     {
         // validatedでvalidation済のデータ取得
         $validatedData = $request->validated();
-        dd($validatedData);
-        $blogPost = new BlogPost();
-        // inputメソッドの第2引数はデフォルト値を指定、$request->titleでもおｋ
-        $blogPost->title = $request->input('title', 'Draft title');
-        $blogPost->content = $request->input('content', 'Draft content');
-        $blogPost->save();
+
+        // instanceを作成してレコード挿入する方法
+        // $blogPost = new BlogPost();
+        // // inputメソッドの第2引数はデフォルト値を指定、$request->titleでもおｋ
+        // $blogPost->title = $request->input('title', 'Draft title');
+        // $blogPost->content = $request->input('content', 'Draft content');
+        // $blogPost->save();
+
+        // static methodのcreateでmass assignment
+        $blogPost = BlogPost::create($validatedData);
 
         // sessionでメッセージ格納
         $request->session()->flash('status', 'Blog post was created!');
