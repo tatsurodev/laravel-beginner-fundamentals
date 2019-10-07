@@ -78,4 +78,18 @@ class PostController extends Controller
         $request->session()->flash('status', 'Blog post was updated!');
         return redirect()->route('posts.show', ['post' => $post->id]);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        // model instanceを取得後削除するにはdelete method、複数可
+        $post = BlogPost::findOrFail($id);
+        $post->delete();
+
+        // primary keyで削除するにはdestroy method、複数可
+        // BlogPost::destroy($id);
+        // BlogPost::destroy([$id1, $id2, $id3]);
+
+        $request->session()->flash('status', 'Blog post was deleted!');
+        return redirect()->route('posts.index');
+    }
 }
