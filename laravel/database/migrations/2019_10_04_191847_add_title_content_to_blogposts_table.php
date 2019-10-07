@@ -16,7 +16,12 @@ class AddTitleContentToBlogpostsTable extends Migration
         Schema::table('blogposts', function (Blueprint $table) {
             // sqliteではnullable or defaultが必要
             $table->string('title')->default('');
-            $table->text('content')->default('');
+            // mysqlではtext型はdefault値を取れないのでsqlite_testing時のみdefault使用
+            if (env('DB_CONNECTION') === 'sqlite_testing') {
+                $table->text('content')->default('');
+            } else {
+                $table->text('content');
+            }
         });
     }
 
