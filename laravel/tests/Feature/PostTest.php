@@ -40,4 +40,19 @@ class PostTest extends TestCase
             'title' => 'New title'
         ]);
     }
+
+    public function testStoreValid()
+    {
+        // arrange
+        $params = [
+            'title' => 'Valid title',
+            'content' => 'At least 10 characters',
+        ];
+        // action, assert
+        // http verb: post(endpoint, data)
+        // post成功時、redirect(302)され、sessionのキーstatusに成功時のメッセージが格納される
+        $this->post('/posts', $params)->assertStatus(302)->assertSessionHas('status');
+        // sessionのstatusキーの値をテスト
+        $this->assertEquals(session('status'), 'Blog post was created!');
+    }
 }
