@@ -68,4 +68,30 @@ class PostTest extends TestCase
         $this->assertEquals($messages['title'][0], 'The title must be at least 5 characters.');
         $this->assertEquals($messages['content'][0], 'The content must be at least 10 characters.');
     }
+
+    public function testUpdateValid()
+    {
+        // store用data用意
+        $post = new BlogPost();
+        $post->title = 'New title';
+        $post->content = 'Content of the blog post';
+        $post->save();
+
+        // assertDatabaseHas(table, array): tableに$post model instanceの配列版があるかassert
+        $this->assertDatabaseHas('blog_posts', $post->toArray());
+
+        // update用data用意
+        $params = [
+            'title' => 'A new named title',
+            'content' => 'Content was changed'
+        ];
+        // putでupdateして、session key, statusがあるかassert
+        $this->put("/posts/{$post->id}", $params)->assertStatus(302)->assertSessionHas('status');
+        // sessionのstatusキーの値をテスト
+        $this->assertEquals(session('status'), 'Blog post was updated!');
+        // update前の$postが消えていることをassert
+        $this->assertDatabaseMissing('blog_posts', $post->toArray());
+        // update後のdataがあることをassert
+        $this->assertDatabaseHas('blog_posts', $params);
+    }
 }
