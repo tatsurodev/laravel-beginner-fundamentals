@@ -44,6 +44,13 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        // phpunit testで使用するdb
+        'sqlite_testing' => [
+            'driver' => 'sqlite',
+            // dbをmemory内で使用
+            'database' => ':memory:',
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
