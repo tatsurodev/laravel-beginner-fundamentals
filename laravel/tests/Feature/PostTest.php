@@ -24,10 +24,7 @@ class PostTest extends TestCase
     public function testSee1BlogPostWhenThereIs1()
     {
         // arrange
-        $post = new BlogPost();
-        $post->title = 'New title';
-        $post->content = 'Content of the blog post';
-        $post->save();
+        $post = $this->createDummyBlogPost();
 
         // act
         $response = $this->get('/posts');
@@ -72,10 +69,7 @@ class PostTest extends TestCase
     public function testUpdateValid()
     {
         // store用data用意
-        $post = new BlogPost();
-        $post->title = 'New title';
-        $post->content = 'Content of the blog post';
-        $post->save();
+        $post = $this->createDummyBlogPost();
 
         // assertDatabaseHas(table, array): tableに$post model instanceの配列版があるかassert
         $this->assertDatabaseHas('blog_posts', $post->toArray());
@@ -93,5 +87,29 @@ class PostTest extends TestCase
         $this->assertDatabaseMissing('blog_posts', $post->toArray());
         // update後のdataがあることをassert
         $this->assertDatabaseHas('blog_posts', $params);
+    }
+
+    public function testDelete()
+    {
+        // 検証用post作成
+        $post = $this->createDummyBlogPost();
+        // 検証用postがあるかassert
+        $this->assertDatabaseHas('blog_posts', $post->toArray());
+        // deleteして、session key, statusがあるかassert
+        $this->delete("/posts/{$post->id}")->assertStatus(302)->assertSessionHas('status');
+        // deleteの第一引数は名前付きrouteを使ってもおｋ
+        // $this->delete(route('posts.destroy', $post->id))->assertStatus(302)->assertSessionHas('status);
+        $this->assertEquals(session('status'), 'Blog post was deleted!');
+        $this->assertDatabaseMissing('blog_posts', $post->toArray());
+    }
+
+    // 最初の検証用post instanceを作成する関数、返り値はBlogPost
+    public function createDummyBlogPost(): BlogPost
+    {
+        $post = new BlogPost();
+        $post->title = 'New title';
+        $post->content = 'Content of the blog post';
+        $post->save();
+        return $post;
     }
 }
