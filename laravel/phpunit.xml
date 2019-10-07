@@ -39,6 +39,6 @@
         <server name="APP_EVENTS_CACHE" value="bootstrap/cache/events.phpunit.php"/>
 
         <!-- .envファイルにある本番環境以外でtest用の環境変数を定義したい場合、phpunit.xmlに記述する -->
-        <server name="DB_CONNECTION" value="sqlite_tesing"/>
+        <server name="DB_CONNECTION" value="sqlite_testing"/>
     </php>
 </phpunit>
