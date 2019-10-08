@@ -122,10 +122,13 @@ class PostTest extends TestCase
     // 最初の検証用post instanceを作成する関数、返り値はBlogPost
     public function createDummyBlogPost(): BlogPost
     {
-        $post = new BlogPost();
-        $post->title = 'New title';
-        $post->content = 'Content of the blog post';
-        $post->save();
-        return $post;
+        // $post = new BlogPost();
+        // $post->title = 'New title';
+        // $post->content = 'Content of the blog post';
+        // $post->save();
+        // return $post;
+
+        // factory stateを使用
+        return factory(BlogPost::class)->states('new-title')->create();
     }
 }
