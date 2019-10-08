@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Comment;
 use App\BlogPost;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,7 +22,7 @@ class PostTest extends TestCase
     }
 
     // postが1つのみのテスト
-    public function testSee1BlogPostWhenThereIs1()
+    public function testSee1BlogPostWhenThereIs1WithoNoComments()
     {
         // arrange
         $post = $this->createDummyBlogPost();
@@ -38,6 +39,19 @@ class PostTest extends TestCase
         $this->assertDatabaseHas('blog_posts', [
             'title' => 'New title'
         ]);
+    }
+
+    // blogとcommentsを作成してassert
+    public function testSee1BlogPostWithComments()
+    {
+        // arrange
+        $post = $this->createDummyBlogPost();
+        factory(Comment::class, 4)->create([
+            'blog_post_id' => $post->id,
+        ]);
+        // act
+        $response = $this->get('/posts');
+        $response->assertSeeText('4 comments');
     }
 
     public function testStoreValid()
