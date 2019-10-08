@@ -50,7 +50,7 @@ class PostController extends Controller
         // sessionの復元, session()->reflash()でもおｋ
         // $request->session()->reflash();
         // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
-        return view('posts.show', ['post' => BlogPost::findOrFail($id)]);
+        return view('posts.show', ['post' => BlogPost::with('comments')->findOrFail($id)]);
     }
 
     public function create()
