@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BlogPost;
 use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -15,6 +16,23 @@ class PostController extends Controller
      */
     public function index()
     {
+        // lazy loading vs eager loading performance check
+        /*
+        // 全queryをlogに記録
+        DB::connection()->enableQueryLog();
+
+        // lazy loading
+        // $post = BlogPost::all();
+        // eager loading
+        $posts = BlogPost::with('comments')->get();
+        foreach ($posts as $post) {
+            foreach ($post->comments as $comment) {
+                echo $comment->comment;
+            }
+        }
+        // 全query logをdd
+        dd(DB::getQueryLog());
+        */
         return view('posts.index', ['posts' => BlogPost::all()]);
     }
 
