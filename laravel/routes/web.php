@@ -59,3 +59,5 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
 // Route::resource('/posts', 'PostController')->except(['destroy']);
 
 Route::resource('/posts', 'PostController');
+
+Auth::routes();
