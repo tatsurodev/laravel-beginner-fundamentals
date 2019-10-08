@@ -31,6 +31,8 @@ class PostTest extends TestCase
 
         // assert
         $response->assertSeeText('New title');
+        // 作りたてのpostなのでno commentのassertion
+        $response->assertSeeText('No comments yet!');
 
         // table内にデータがあるかどうかチェック
         $this->assertDatabaseHas('blog_posts', [

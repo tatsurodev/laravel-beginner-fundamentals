@@ -33,7 +33,10 @@ class PostController extends Controller
         // 全query logをdd
         dd(DB::getQueryLog());
         */
-        return view('posts.index', ['posts' => BlogPost::all()]);
+
+        // comments数も一緒に渡す
+        // withCount('relation')で、relation数をrelation_count fieldをモデルに追加できる
+        return view('posts.index', ['posts' => BlogPost::withCount('comments')->get()]);
     }
 
     /**
