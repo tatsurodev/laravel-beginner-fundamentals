@@ -25,7 +25,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    // login後のredirect先
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -36,4 +37,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    // login時に使用されるpasswordの相方となるfield名
+    // defaultはemailだが変更できる
+    // public function username()
+    // {
+    //     return 'username';
+    // }
 }
