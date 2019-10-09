@@ -17,7 +17,11 @@ class CreateCommentsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->text('content');
+            if (env('DB_CONNECTION') === 'sqlite_testing') {
+                $table->text('content')->default('');
+            } else {
+                $table->text('content');
+            }
             $table->unsignedBigInteger('blog_post_id')->index();
             $table->foreign('blog_post_id')->references('id')->on('blog_posts');
         });
