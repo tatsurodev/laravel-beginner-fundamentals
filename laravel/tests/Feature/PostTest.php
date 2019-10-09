@@ -64,7 +64,8 @@ class PostTest extends TestCase
         // action, assert
         // http verb: post(endpoint, data)
         // post成功時、redirect(302)され、sessionのキーstatusに成功時のメッセージが格納される
-        $this->post('/posts', $params)->assertStatus(302)->assertSessionHas('status');
+        // PostController@storeはauth middlewareが設定されているので、actingAsでlogin userをセットする必要あり。また$thisを返すので他のmethodをそのままチェーンできる
+        $this->actingAs($this->user())->post('/posts', $params)->assertStatus(302)->assertSessionHas('status');
         // sessionのstatusキーの値をテスト
         $this->assertEquals(session('status'), 'Blog post was created!');
     }
@@ -75,7 +76,7 @@ class PostTest extends TestCase
             'title' => 'x',
             'content' => 'x',
         ];
-        $this->post('/posts', $params)->assertStatus(302)->assertSessionHas('errors');
+        $this->actingAs($this->user())->post('/posts', $params)->assertStatus(302)->assertSessionHas('errors');
         // dd(session('errors'));
         $messages = session('errors')->getMessages();
         $this->assertEquals($messages['title'][0], 'The title must be at least 5 characters.');
@@ -96,7 +97,7 @@ class PostTest extends TestCase
             'content' => 'Content was changed'
         ];
         // putでupdateして、session key, statusがあるかassert
-        $this->put("/posts/{$post->id}", $params)->assertStatus(302)->assertSessionHas('status');
+        $this->actingAs($this->user())->put("/posts/{$post->id}", $params)->assertStatus(302)->assertSessionHas('status');
         // sessionのstatusキーの値をテスト
         $this->assertEquals(session('status'), 'Blog post was updated!');
         // update前の$postが消えていることをassert
@@ -112,7 +113,7 @@ class PostTest extends TestCase
         // 検証用postがあるかassert
         $this->assertDatabaseHas('blog_posts', $post->toArray());
         // deleteして、session key, statusがあるかassert
-        $this->delete("/posts/{$post->id}")->assertStatus(302)->assertSessionHas('status');
+        $this->actingAs($this->user())->delete("/posts/{$post->id}")->assertStatus(302)->assertSessionHas('status');
         // deleteの第一引数は名前付きrouteを使ってもおｋ
         // $this->delete(route('posts.destroy', $post->id))->assertStatus(302)->assertSessionHas('status);
         $this->assertEquals(session('status'), 'Blog post was deleted!');
