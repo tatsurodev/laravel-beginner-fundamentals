@@ -17,7 +17,10 @@
 // この上下は同値
 // Route::view('/', 'home')->name('home');
 
-Route::get('/', 'HomeController@home')->name('home');
+Route::get('/', 'HomeController@home')
+    // routeにmiddlewareを追加
+    // ->middleware('auth')
+    ->name('home');
 
 // Route::get('/contact', function () {
 //     return view('contact');
