@@ -14,9 +14,14 @@ class AddUserToBlogPostsTable extends Migration
     public function up()
     {
         Schema::table('blog_posts', function (Blueprint $table) {
-            // 既存のblog_posts tableにuser_id fieldを追加するとデフォルト値がないのでエラーとなるのでnullableを指定する、art migrate:refreshの場合はdataをゼロから作るので不要
-            // $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('user_id');
+            // test環境のsqlite(sqlite_testing)でカラムを追加する時、nullableかdefaultが必要
+            if (env('DB_CONNECTION') === 'sqlite_testing') {
+                $table->unsignedBigInteger('user_id')->default(0);
+            } else {
+                // 既存のblog_posts tableにuser_id fieldを追加するとデフォルト値がないのでエラーとなるのでnullableを指定する、art migrate:refreshの場合はdataをゼロから作るので不要
+                // $table->unsignedBigInteger('user_id')->nullable();
+                $table->unsignedBigInteger('user_id');
+            }
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
