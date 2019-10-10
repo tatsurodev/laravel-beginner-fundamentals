@@ -92,9 +92,10 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = BlogPost::findOrFail($id);
-        if (Gate::denies('update-post', $post)) {
-            abort(403, "You can't edit this blog post!");
-        }
+        // if (Gate::denies('update-post', $post)) {
+        //     abort(403, "You can't edit this blog post!");
+        // }
+        $this->authorize('update-post', $post);
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -102,10 +103,11 @@ class PostController extends Controller
     {
         $post = BlogPost::findOrFail($id);
         // gateでauthrization
-        if (Gate::denies('update-post', $post)) {
-            // abort(status, msg)
-            abort(403, "You can't edit this blog post!");
-        }
+        // if (Gate::denies('update-post', $post)) {
+        //     // abort(status, msg)
+        //     abort(403, "You can't edit this blog post!");
+        // }
+        $this->authorize('update-post', $post);
         $validatedData = $request->validated();
         // 既にあるinstanceに対するmass assignmentはfill methodを使用
         $post->fill($validatedData);
@@ -118,6 +120,10 @@ class PostController extends Controller
     {
         // model instanceを取得後削除するにはdelete method、複数可
         $post = BlogPost::findOrFail($id);
+        // if (Gate::denies('delete-post', $post)) {
+        //     abort(403, "You can't delete this blog post!");
+        // }
+        $this->authorize('delete-post', $post);
         $post->delete();
 
         // primary keyで削除するにはdestroy method、複数可
