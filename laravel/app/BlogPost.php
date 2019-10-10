@@ -25,11 +25,20 @@ class BlogPost extends Model
     {
         parent::boot();
 
-        // delete event前にclosureの中の処理が実行される
+        // recordのdeleteにはdb的に２つの意味がある、softdeletとcascade
+        // softdelete: recordにdeleted_atをつけただけで物理的には削除されていない
+        // cascade: dbの子tableの外部キーにcascadeをつけて参照先の親のrecordが削除された時に共に物理的にも削除する
+        // このprojectでは、最終的に下記のevent listenerでpostのdelete, restore時に関連するcommentをsofltdeleteし、またforcedeleteされた場合は、comments tableのmigration fileで設定されたcascadeで関連するcommentを物理的に削除している
+        // delete event前にclosureの中の処理(postに関連するcommentの削除)が実行される
         // staticで遅延静的束縛
-        // static::deleting(function (BlogPost $blogPost) {
-        //     // postとrelationのあるcommentが削除される
-        //     $blogPost->comments()->delete();
-        // });
+        static::deleting(function (BlogPost $blogPost) {
+            // postとrelationのあるcommentが削除される
+            $blogPost->comments()->delete();
+        });
+
+        // postのrestoreの前に関連するcommentもrestore
+        static::restoring(function (BlogPost $blogPost) {
+            $blogPost->comments()->restore();
+        });
     }
 }
