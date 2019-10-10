@@ -7,6 +7,12 @@
                 {{-- 名前付きルートposts.showに渡すpostパラメータを指定 --}}
                 <a href="{{ route('posts.show', ['post' => $post->id]) }}">{{ $post->title }}</a>
             </h3>
+
+            <p class="text-muted">
+                Added {{ $post->created_at->diffForHumans() }}
+                by {{ $post->user->name }}
+            </p>
+
             @if($post->comments_count)
                 <p>{{ $post->comments_count }} comments</p>
             @else
