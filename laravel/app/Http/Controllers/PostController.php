@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
-use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePost;
+use Illuminate\Support\Facades\Gate;
 // use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -91,12 +92,20 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = BlogPost::findOrFail($id);
+        if (Gate::denies('update-post', $post)) {
+            abort(403, "You can't edit this blog post!");
+        }
         return view('posts.edit', ['post' => $post]);
     }
 
     public function update(StorePost $request, $id)
     {
         $post = BlogPost::findOrFail($id);
+        // gateでauthrization
+        if (Gate::denies('update-post', $post)) {
+            // abort(status, msg)
+            abort(403, "You can't edit this blog post!");
+        }
         $validatedData = $request->validated();
         // 既にあるinstanceに対するmass assignmentはfill methodを使用
         $post->fill($validatedData);
