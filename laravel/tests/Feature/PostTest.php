@@ -117,11 +117,13 @@ class PostTest extends TestCase
         // deleteの第一引数は名前付きrouteを使ってもおｋ
         // $this->delete(route('posts.destroy', $post->id))->assertStatus(302)->assertSessionHas('status);
         $this->assertEquals(session('status'), 'Blog post was deleted!');
-        $this->assertDatabaseMissing('blog_posts', $post->toArray());
+        // $this->assertDatabaseMissing('blog_posts', $post->toArray());
+        // softdeletesに対応したassert
+        $this->assertSoftDeleted('blog_posts', $post->toArray());
     }
 
     // 最初の検証用post instanceを作成する関数、返り値はBlogPost
-    public function createDummyBlogPost(): BlogPost
+    private function createDummyBlogPost(): BlogPost
     {
         // $post = new BlogPost();
         // $post->title = 'New title';
