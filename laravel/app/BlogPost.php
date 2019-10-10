@@ -15,4 +15,17 @@ class BlogPost extends Model
     {
         return $this->hasMany('App\Comment');
     }
+
+    // model events
+    public static function boot()
+    {
+        parent::boot();
+
+        // delete event前にclosureの中の処理が実行される
+        // staticで遅延静的束縛
+        static::deleting(function (BlogPost $blogPost) {
+            // postとrelationのあるcommentが削除される
+            $blogPost->comments()->delete();
+        });
+    }
 }
