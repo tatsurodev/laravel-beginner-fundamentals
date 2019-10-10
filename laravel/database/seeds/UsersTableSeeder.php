@@ -20,13 +20,17 @@ class UsersTableSeeder extends Seeder
         //     'remember_token' => Str::random(10)
         // ]);
 
+        // 必要なuser数をask、terminalから取得。askの第二引数でユーザーが未入力だった場合のdefault値指定。得られる値はstringなのでintに変換。0を入力されると困るので最低1user作成
+        $usersCount = max((int) $this->command->ask('How many users would you like? min is 1.', 20), 1);
+
+
         // login用ユーザー
         // $admin = factory(App\User::class)->states('admin')->create();
         factory(App\User::class)->states('admin')->create();
 
         // その他ダミーユーザー
         // $else = factory(App\User::class, 20)->create();
-        factory(App\User::class, 20)->create();
+        factory(App\User::class, $usersCount)->create();
 
         // dd(get_class($admin)); //"App\User"
         // dd(get_class($else); // "Illuminate\Database\Eloquent\Collection"
