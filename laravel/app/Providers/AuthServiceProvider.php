@@ -35,5 +35,21 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-post', function ($user, $post) {
             return $user->id == $post->id;
         });
+
+        // admin userに特定のabilityを付与
+        // gate checkがcallされる前にこの処理が呼ばれる
+        Gate::before(function ($user, $ability) {
+            // userがadminかつ、リストの中にあるabilityは、gateをpassできる
+            if ($user->is_admin && in_array($ability, ['update-post',])) {
+                return true;
+            }
+        });
+
+        // gete check後にafterが呼ばれ、gate checkの結果が第三引数$resultに格納され、通常のgate checkが終わった後でもこのGate::afterで結果をまだ変えることができる
+        // Gate::after(function ($user, $ability, $result) {
+        //     if ($user->is_admin) {
+        //         return true;
+        //     }
+        // });
     }
 }

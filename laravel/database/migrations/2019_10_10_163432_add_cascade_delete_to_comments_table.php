@@ -16,7 +16,7 @@ class AddCascadeDeleteToCommentsTable extends Migration
         // cascadeを外部キーにつける為に一度、外部キー設定を外してから再度cascadeをつけて設定する
         Schema::table('comments', function (Blueprint $table) {
             // sqliteでは外部キーを削除できないのでtest時にエラーが出る。よってsqliteの時は外部キーの再設定でおｋ
-            if (!env('DB_CONNECTION') === 'sqlite_testing') {
+            if (env('DB_CONNECTION') !== 'sqlite_testing') {
                 $table->dropForeign(['blog_post_id']);
             }
             // 外部キーの参照先である親tableのrecordが削除されたら、この外部キーを持つrecordも削除する。
