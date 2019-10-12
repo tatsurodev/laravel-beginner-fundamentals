@@ -85,8 +85,10 @@ class PostTest extends TestCase
 
     public function testUpdateValid()
     {
-        // store用data用意
-        $post = $this->createDummyBlogPost();
+        // authorize用user作成、格納
+        $user = $this->user();
+        // user.idを指定して、store用data用意
+        $post = $this->createDummyBlogPost($user->id);
 
         // assertDatabaseHas(table, array): tableに$post model instanceの配列版があるかassert
         $this->assertDatabaseHas('blog_posts', $post->toArray());
@@ -97,7 +99,7 @@ class PostTest extends TestCase
             'content' => 'Content was changed'
         ];
         // putでupdateして、session key, statusがあるかassert
-        $this->actingAs($this->user())->put("/posts/{$post->id}", $params)->assertStatus(302)->assertSessionHas('status');
+        $this->actingAs($user)->put("/posts/{$post->id}", $params)->assertStatus(302)->assertSessionHas('status');
         // sessionのstatusキーの値をテスト
         $this->assertEquals(session('status'), 'Blog post was updated!');
         // update前の$postが消えていることをassert
@@ -108,12 +110,14 @@ class PostTest extends TestCase
 
     public function testDelete()
     {
-        // 検証用post作成
-        $post = $this->createDummyBlogPost();
+        // authorize用user作成、格納
+        $user = $this->user();
+        // user.idを指定して、検証用post作成
+        $post = $this->createDummyBlogPost($user->id);
         // 検証用postがあるかassert
         $this->assertDatabaseHas('blog_posts', $post->toArray());
         // deleteして、session key, statusがあるかassert
-        $this->actingAs($this->user())->delete("/posts/{$post->id}")->assertStatus(302)->assertSessionHas('status');
+        $this->actingAs($user)->delete("/posts/{$post->id}")->assertStatus(302)->assertSessionHas('status');
         // deleteの第一引数は名前付きrouteを使ってもおｋ
         // $this->delete(route('posts.destroy', $post->id))->assertStatus(302)->assertSessionHas('status);
         $this->assertEquals(session('status'), 'Blog post was deleted!');
@@ -123,7 +127,8 @@ class PostTest extends TestCase
     }
 
     // 最初の検証用post instanceを作成する関数、返り値はBlogPost
-    private function createDummyBlogPost(): BlogPost
+    // PostController@update, deleteはauthorizeとしてpostを作成したuserが必要。よって引数にpost instanceを作成するuserを指定、なければその場で作ってuser.idをセット
+    private function createDummyBlogPost($userId = null): BlogPost
     {
         // $post = new BlogPost();
         // $post->title = 'New title';
@@ -132,6 +137,8 @@ class PostTest extends TestCase
         // return $post;
 
         // factory stateを使用
-        return factory(BlogPost::class)->states('new-title')->create();
+        return factory(BlogPost::class)->states('new-title')->create([
+            'user_id' => $userId ?? $this->user()->id,
+        ]);
     }
 }
