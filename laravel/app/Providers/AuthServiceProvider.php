@@ -39,6 +39,11 @@ class AuthServiceProvider extends ServiceProvider
         //     return $user->id == $post->id;
         // });
 
+        // contact page用home.secret gate作成
+        Gate::define('home.secret', function ($user) {
+            return $user->is_admin;
+        });
+
         // policyの登録
         // Gate::define('posts.update', 'App\Policies\BlogPostPolicy@update');
         // Gate::define('posts.delete', 'App\Policies\BlogPostPolicy@delete');

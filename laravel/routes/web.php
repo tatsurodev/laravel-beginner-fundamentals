@@ -28,6 +28,9 @@ Route::get('/', 'HomeController@home')
 
 Route::get('/contact', 'HomeController@contact')->name('contact');
 
+// routeにhome.secret gate middleware設定
+Route::get('/secret', 'HomeController@secret')->name('secret')->middleware('can:home.secret');
+
 // パラメーター名にハイフンは使えない
 // 複数のパラメータは左から右へ順にクロージャへ渡されるのでパラメータ名とクロージャで受ける引数名は一致しなくてもおｋ
 // 任意パラメータは?をつけ、クロージャの引数でデフォルトを指定
