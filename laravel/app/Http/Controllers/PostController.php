@@ -8,6 +8,17 @@ use App\Http\Requests\StorePost;
 use Illuminate\Support\Facades\Gate;
 // use Illuminate\Support\Facades\DB;
 
+// actionとpolicyの対応
+// action => policy
+// [
+//     'show' => 'view',
+//     'create' => 'create',
+//     'store' => 'create',
+//     'edit' => 'update',
+//     'update' => 'update',
+//     'destroy' => 'delete',
+// ]
+
 class PostController extends Controller
 {
     // controller内でのmiddlewareの設定
@@ -96,7 +107,7 @@ class PostController extends Controller
         // if (Gate::denies('update-post', $post)) {
         //     abort(403, "You can't edit this blog post!");
         // }
-        $this->authorize('posts.update', $post);
+        $this->authorize($post);
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -108,7 +119,7 @@ class PostController extends Controller
         //     // abort(status, msg)
         //     abort(403, "You can't edit this blog post!");
         // }
-        $this->authorize('posts.update', $post);
+        $this->authorize($post);
         $validatedData = $request->validated();
         // 既にあるinstanceに対するmass assignmentはfill methodを使用
         $post->fill($validatedData);
@@ -124,7 +135,7 @@ class PostController extends Controller
         // if (Gate::denies('delete-post', $post)) {
         //     abort(403, "You can't delete this blog post!");
         // }
-        $this->authorize('posts.delete', $post);
+        $this->authorize($post);
         $post->delete();
 
         // primary keyで削除するにはdestroy method、複数可

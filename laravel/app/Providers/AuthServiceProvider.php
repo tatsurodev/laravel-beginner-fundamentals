@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\BlogPost' => 'App\Policies\BlogPostPolicy',
     ];
 
     /**
@@ -30,6 +31,8 @@ class AuthServiceProvider extends ServiceProvider
         // Gate::define('update-post', function ($user, $post) {
         //     return $user->id == $post->user_id;
         // });
+        // Gage::allows('updsate-poast', $post);
+        // $this->authorize('update-post', $post);
 
         // PostController@destroy用gate
         // Gate::define('delete-post', function ($user, $post) {
@@ -41,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         // Gate::define('posts.delete', 'App\Policies\BlogPostPolicy@delete');
 
         // resource methodでposts.create, posts.view, posts.update, posts.deleteを登録
-        Gate::resource('posts', 'App\Policies\BlogPostPolicy');
+        // Gate::resource('posts', 'App\Policies\BlogPostPolicy');
 
         // admin userに特定のabilityを付与
         // gate checkがcallされる前にこの処理が呼ばれる
