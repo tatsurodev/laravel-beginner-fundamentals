@@ -48,12 +48,12 @@ class AuthServiceProvider extends ServiceProvider
 
         // admin userに特定のabilityを付与
         // gate checkがcallされる前にこの処理が呼ばれる
-        // Gate::before(function ($user, $ability) {
-        //     // userがadminかつ、リストの中にあるabilityは、gateをpassできる
-        //     if ($user->is_admin && in_array($ability, ['posts.update',])) {
-        //         return true;
-        //     }
-        // });
+        Gate::before(function ($user, $ability) {
+            // userがadminかつ、リストの中にあるabilityは、gateをpassできる
+            if ($user->is_admin && in_array($ability, ['update',])) {
+                return true;
+            }
+        });
 
         // gete check後にafterが呼ばれ、gate checkの結果が第三引数$resultに格納され、通常のgate checkが終わった後でもこのGate::afterで結果をまだ変えることができる
         // Gate::after(function ($user, $ability, $result) {
