@@ -27,23 +27,30 @@ class AuthServiceProvider extends ServiceProvider
 
         // PostController@update用gate
         // Gate::define('gate_name', function ($user, $instance) { return bool })
-        Gate::define('update-post', function ($user, $post) {
-            return $user->id == $post->user_id;
-        });
+        // Gate::define('update-post', function ($user, $post) {
+        //     return $user->id == $post->user_id;
+        // });
 
         // PostController@destroy用gate
-        Gate::define('delete-post', function ($user, $post) {
-            return $user->id == $post->id;
-        });
+        // Gate::define('delete-post', function ($user, $post) {
+        //     return $user->id == $post->id;
+        // });
+
+        // policyの登録
+        // Gate::define('posts.update', 'App\Policies\BlogPostPolicy@update');
+        // Gate::define('posts.delete', 'App\Policies\BlogPostPolicy@delete');
+
+        // resource methodでposts.create, posts.view, posts.update, posts.deleteを登録
+        Gate::resource('posts', 'App\Policies\BlogPostPolicy');
 
         // admin userに特定のabilityを付与
         // gate checkがcallされる前にこの処理が呼ばれる
-        Gate::before(function ($user, $ability) {
-            // userがadminかつ、リストの中にあるabilityは、gateをpassできる
-            if ($user->is_admin && in_array($ability, ['update-post',])) {
-                return true;
-            }
-        });
+        // Gate::before(function ($user, $ability) {
+        //     // userがadminかつ、リストの中にあるabilityは、gateをpassできる
+        //     if ($user->is_admin && in_array($ability, ['posts.update',])) {
+        //         return true;
+        //     }
+        // });
 
         // gete check後にafterが呼ばれ、gate checkの結果が第三引数$resultに格納され、通常のgate checkが終わった後でもこのGate::afterで結果をまだ変えることができる
         // Gate::after(function ($user, $ability, $result) {
