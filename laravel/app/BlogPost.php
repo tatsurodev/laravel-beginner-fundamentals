@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,6 +30,9 @@ class BlogPost extends Model
     public static function boot()
     {
         parent::boot();
+
+        // global scopeにLatestScope登録
+        static::addGlobalScope(new LatestScope);
 
         // recordのdeleteにはdb的に２つの意味がある、softdeletとcascade
         // softdelete: recordにdeleted_atをつけただけで物理的には削除されていない
