@@ -81,6 +81,9 @@ class PostController extends Controller
         // validatedでvalidation済のデータ取得
         $validatedData = $request->validated();
 
+        // 現ユーザーのidをセット
+        $validatedData['user_id'] = $request->user()->id;
+
         // instanceを作成してレコード挿入する方法
         // $blogPost = new BlogPost();
         // // inputメソッドの第2引数はデフォルト値を指定、$request->titleでもおｋ

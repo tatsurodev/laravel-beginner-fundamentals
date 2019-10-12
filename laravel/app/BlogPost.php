@@ -13,7 +13,7 @@ class BlogPost extends Model
     // softdelete使用
     use SoftDeletes;
 
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title', 'content', 'user_id'];
 
     public function comments()
     {
