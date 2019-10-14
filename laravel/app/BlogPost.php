@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Scopes\LatestScope;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +33,13 @@ class BlogPost extends Model
     {
         return $query->orderBy(static::CREATED_AT, 'desc');
     }
+
+    public function scopeMostCommented(Builder $query)
+    {
+        // comments_count
+        return $query->withCount('comments')->orderBy('comments_count', 'desc');
+    }
+
     // model events
     public static function boot()
     {
