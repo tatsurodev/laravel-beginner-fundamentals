@@ -53,7 +53,8 @@ class PostController extends Controller
 
         // comments数も一緒に渡す
         // withCount('relation')で、relation数をrelation_count fieldをモデルに追加できる
-        return view('posts.index', ['posts' => BlogPost::withCount('comments')->get()]);
+        // local scope latestを使用
+        return view('posts.index', ['posts' => BlogPost::latest()->withCount('comments')->get()]);
     }
 
     /**
@@ -67,7 +68,14 @@ class PostController extends Controller
         // sessionの復元, session()->reflash()でもおｋ
         // $request->session()->reflash();
         // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
-        return view('posts.show', ['post' => BlogPost::with('comments')->findOrFail($id)]);
+        return view('posts.show', ['post' => BlogPost::with(
+            // eager loadにlatest scope追加
+            // ['comments' => function ($query) {
+            //     return $query->latest();
+            // }]
+            // BlogPost modelのcomments relation取得時にlocal scopeのlatestを適用している
+            'comments'
+        )->findOrFail($id)]);
     }
 
     public function create()

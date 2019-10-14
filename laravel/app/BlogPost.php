@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Scopes\LatestScope;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -18,7 +19,8 @@ class BlogPost extends Model
 
     public function comments()
     {
-        return $this->hasMany('App\Comment');
+        // local scope使用
+        return $this->hasMany('App\Comment')->latest();
     }
 
     public function user()
@@ -26,13 +28,18 @@ class BlogPost extends Model
         return $this->belongsTo('App\User');
     }
 
+    // local scope作成
+    public function scopeLatest(Builder $query)
+    {
+        return $query->orderBy(static::CREATED_AT, 'desc');
+    }
     // model events
     public static function boot()
     {
         parent::boot();
 
         // global scopeにLatestScope登録
-        static::addGlobalScope(new LatestScope);
+        // static::addGlobalScope(new LatestScope);
 
         // recordのdeleteにはdb的に２つの意味がある、softdeletとcascade
         // softdelete: recordにdeleted_atをつけただけで物理的には削除されていない
