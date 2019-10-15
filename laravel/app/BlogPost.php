@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\DeletedAdminScope;
 use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,9 @@ class BlogPost extends Model
     // model events
     public static function boot()
     {
+        // bootより前に追加
+        static::addGlobalScope(new DeletedAdminScope);
+
         parent::boot();
 
         // global scopeにLatestScope登録

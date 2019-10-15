@@ -6,8 +6,16 @@
             @forelse ($posts as $post)
                 <p>
                     <h3>
+                        {{-- trashed postsはdel tagで囲む start --}}
+                        @if($post->trashed())
+                            <del>
+                        @endif
                         {{-- 名前付きルートposts.showに渡すpostパラメータを指定 --}}
-                        <a href="{{ route('posts.show', ['post' => $post->id]) }}">{{ $post->title }}</a>
+                        <a class="{{ $post->trashed() ? 'text-muted' : '' }}" href="{{ route('posts.show', ['post' => $post->id]) }}">{{ $post->title }}</a>
+                        {{-- trashed postsはdel tagで囲む end --}}
+                        @if($post->trashed())
+                            </del>
+                        @endif
                     </h3>
 
                     <p class="text-muted">
@@ -29,13 +37,16 @@
                         <p>You can't delete this post.</p>
                     @endcannot --}}
 
-                    @can('delete', $post)
-                        <form method="post" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}">
-                            @csrf
-                            @method('delete')
-                            <input type="submit" value="Delete!" class="btn btn-primary">
-                        </form>
-                    @endcan
+                    {{-- delete buttonをtrashされていない状態でのみ表示 --}}
+                    @if(!$post->trashed())
+                        @can('delete', $post)
+                            <form method="post" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}">
+                                @csrf
+                                @method('delete')
+                                <input type="submit" value="Delete!" class="btn btn-primary">
+                            </form>
+                        @endcan
+                    @endif
 
                 </p>
             @empty

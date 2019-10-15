@@ -55,7 +55,7 @@ class AuthServiceProvider extends ServiceProvider
         // gate checkがcallされる前にこの処理が呼ばれる
         Gate::before(function ($user, $ability) {
             // userがadminかつ、リストの中にあるabilityは、gateをpassできる
-            if ($user->is_admin && in_array($ability, ['update',])) {
+            if ($user->is_admin && in_array($ability, ['update', 'delete'])) {
                 return true;
             }
         });
