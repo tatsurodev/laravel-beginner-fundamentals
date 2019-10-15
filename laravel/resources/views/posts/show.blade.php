@@ -1,17 +1,13 @@
 @extends('layout')
 
 @section('content')
-    <h1>{{ $post->title }}</h1>
-    <p>{{ $post->content }}</p>
-    {{-- diffForHumansで人にわかりやすい形式で表示 --}}
-    <p>Added {{ $post->created_at->diffForHumans() }}</p>
-
-    {{-- 現在時刻をnew Carbon\Carbon()で取得し、diffInMinutesメソッドの引数との差分が5以下ならNew!と表示 --}}
-    @if ((new Carbon\Carbon())->diffInMinutes($post->created_at) < 995)
+    <h1>
+        {{ $post->title }}
         {{-- slotへdataの配列を渡す --}}
         {{-- @badge(['type' => 'primary']) --}}
         {{-- type slotを渡していないのでdefault値が使用される --}}
-        @badge
+        {{-- 現在時刻をnew Carbon\Carbon()で取得し、diffInMinutesメソッドの引数との差分が5以下ならNew!と表示 --}}
+        @badge(['show' => now()->diffInMinutes($post->created_at) < 5])
             Brand new Post!
         @endbadge
         {{-- slot directiveを使ってslot変数を渡す --}}
@@ -23,7 +19,10 @@
             @endslot
         @endcomponent
         -->
-    @endif
+    </h1>
+    <p>{{ $post->content }}</p>
+    {{-- diffForHumansで人にわかりやすい形式で表示 --}}
+    <p>Added {{ $post->created_at->diffForHumans() }}</p>
 
     <h4>Comments</h4>
     @forelse ($post->comments as $comment)
