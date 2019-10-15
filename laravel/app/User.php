@@ -57,6 +57,7 @@ class User extends Authenticatable
                 }
             ])
             ->having('blog_posts_count', '>=', 2)
+            // ->has('blogPosts', '>=', 2)
             ->orderBy('blog_posts_count', 'desc');
     }
 }
