@@ -27,25 +27,28 @@
                         <p>No comments yet!</p>
                     @endif
 
-                    @can('update', $post)
-                        <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary">Edit</a>
-                    @endcan
+                    {{-- userがadminかつabilityがupdate, deleteのみgate checkがtrueとなるので、そもそもauth userでなければgate checkの必要はないのでauth directiveを追加して処理を最適化 --}}
+                    @auth
+                        @can('update', $post)
+                            <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary">Edit</a>
+                        @endcan
+                    @endauth
 
                     {{-- @cannot('delete', $post)
                         <p>You can't delete this post.</p>
                     @endcannot --}}
-
-                    {{-- delete buttonをtrashされていない状態でのみ表示 --}}
-                    @if(!$post->trashed())
-                        @can('delete', $post)
-                            <form method="post" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}">
-                                @csrf
-                                @method('delete')
-                                <input type="submit" value="Delete!" class="btn btn-primary">
-                            </form>
-                        @endcan
-                    @endif
-
+                    @auth
+                        {{-- delete buttonをtrashされていない状態でのみ表示 --}}
+                        @if(!$post->trashed())
+                            @can('delete', $post)
+                                <form method="post" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id]) }}">
+                                    @csrf
+                                    @method('delete')
+                                    <input type="submit" value="Delete!" class="btn btn-primary">
+                                </form>
+                            @endcan
+                        @endif
+                    @endauth
                 </p>
             @empty
                 <p>No blog posts yet!</p>
