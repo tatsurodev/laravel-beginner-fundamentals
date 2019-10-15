@@ -26,5 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // componentにaliasを作成する、Blade::component(component path, alias name)
         Blade::component('components.badge', 'badge');
+        Blade::component('components.updated', 'updated');
     }
 }
