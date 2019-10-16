@@ -54,13 +54,13 @@ class PostController extends Controller
         */
 
         // remember(cache_name, minites, function(){})
-        $mostCommented = Cache::remember('blog-post-commented', now()->addSeconds(60), function () {
+        $mostCommented = Cache::tags(['blog-post'])->remember('blog-post-commented', now()->addSeconds(60 * 60), function () {
             return BlogPost::mostCommented()->take(5)->get();
         });
-        $mostActive = Cache::remember('users-most-active', now()->addSeconds(60), function () {
+        $mostActive = Cache::remember('users-most-active', now()->addSeconds(60 * 60), function () {
             return User::withMostBlogPosts()->take(5)->get();
         });
-        $mostActiveLastMonth = Cache::remember('users-most-active-last-month', now()->addSeconds(60), function () {
+        $mostActiveLastMonth = Cache::remember('users-most-active-last-month', now()->addSeconds(60 * 60), function () {
             return User::withMostBlogPostsLastMonth()->take(5)->get();
         });
         // comments数も一緒に渡す
@@ -84,7 +84,7 @@ class PostController extends Controller
     {
         // sessionの復元, session()->reflash()でもおｋ
         // $request->session()->reflash();
-        $blogPost = Cache::remember("blog-post-{$id}", 60, function () use ($id) {
+        $blogPost = Cache::tags(['blog-post'])->remember("blog-post-{$id}", 60, function () use ($id) {
             // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
             return BlogPost::with(
                 // eager loadにlatest scope追加
@@ -103,7 +103,7 @@ class PostController extends Controller
         // 閲覧中のusersを配列に保存するキー
         $usersKey = "blog-post-{$id}-users";
         // usersをキャッシュから復元、キーがなければ初アクセスなので空配列セット
-        $users = Cache::get($usersKey, []);
+        $users = Cache::tags(['blog-post'])->get($usersKey, []);
         // アクセスしてきたuserを保存する配列で、一定時間(この場合1分)を超えていたら削除する
         $usersUpdate = [];
         // counterの増減
@@ -129,17 +129,17 @@ class PostController extends Controller
         $usersUpdate[$sessionId] = $now;
 
         // usersをcacheに保存
-        Cache::forever($usersKey, $usersUpdate);
+        Cache::tags(['blog-post'])->forever($usersKey, $usersUpdate);
 
         // counterをcacheに保存
-        if (!Cache::has($counterKey)) {
-            Cache::forever($counterKey, 1);
+        if (!Cache::tags(['blog-post'])->has($counterKey)) {
+            Cache::tags(['blog-post'])->forever($counterKey, 1);
         } else {
-            Cache::increment($counterKey, $diffrence);
+            Cache::tags(['blog-post'])->increment($counterKey, $diffrence);
         }
 
         // 現counterの値を取得
-        $counter = Cache::get($counterKey);
+        $counter = Cache::tags(['blog-post'])->get($counterKey);
 
         return view('posts.show', ['post' => $blogPost, 'counter' => $counter,]);
     }
