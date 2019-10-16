@@ -30,6 +30,11 @@ class BlogPost extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
+    }
+
     // local scope作成
     public function scopeLatest(Builder $query)
     {
