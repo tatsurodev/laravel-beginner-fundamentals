@@ -95,7 +95,10 @@ class PostController extends Controller
                 'comments'
             )->findOrFail($id);
         });
-        return view('posts.show', ['post' => $blogPost]);
+
+        $counter = 0;
+
+        return view('posts.show', ['post' => $blogPost, 'counter' => $counter,]);
     }
 
     public function create()
