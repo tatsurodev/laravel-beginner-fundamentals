@@ -54,14 +54,14 @@ class PostController extends Controller
         */
 
         // remember(cache_name, minites, function(){})
-        $mostCommented = Cache::remember('mostCommented', now()->addSeconds(60), function () {
+        $mostCommented = Cache::remember('blog-post-commented', now()->addSeconds(60), function () {
             return BlogPost::mostCommented()->take(5)->get();
         });
-        $mostActive = Cache::remember('mostCommented', now()->addSeconds(60), function () {
+        $mostActive = Cache::remember('users-most-active', now()->addSeconds(60), function () {
             return User::withMostBlogPosts()->take(5)->get();
         });
-        $mostActiveLastMonth = Cache::remember('mostCommented', now()->addSeconds(60), function () {
-            return ser::withMostBlogPostsLastMonth()->take(5)->get();
+        $mostActiveLastMonth = Cache::remember('users-most-active-last-month', now()->addSeconds(60), function () {
+            return User::withMostBlogPostsLastMonth()->take(5)->get();
         });
         // comments数も一緒に渡す
         // withCount('relation')で、relation数をrelation_count fieldをモデルに追加できる
@@ -84,15 +84,18 @@ class PostController extends Controller
     {
         // sessionの復元, session()->reflash()でもおｋ
         // $request->session()->reflash();
-        // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
-        return view('posts.show', ['post' => BlogPost::with(
-            // eager loadにlatest scope追加
-            // ['comments' => function ($query) {
-            //     return $query->latest();
-            // }]
-            // BlogPost modelのcomments relation取得時にlocal scopeのlatestを適用している
-            'comments'
-        )->findOrFail($id)]);
+        $blogPost = Cache::remember("blog-post-{$id}", 60, function () use ($id) {
+            // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
+            return BlogPost::with(
+                // eager loadにlatest scope追加
+                // ['comments' => function ($query) {
+                //     return $query->latest();
+                // }]
+                // BlogPost modelのcomments relation取得時にlocal scopeのlatestを適用している
+                'comments'
+            )->findOrFail($id);
+        });
+        return view('posts.show', ['post' => $blogPost]);
     }
 
     public function create()

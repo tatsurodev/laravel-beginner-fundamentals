@@ -2,10 +2,11 @@
 
 namespace App;
 
-use App\Scopes\DeletedAdminScope;
 use App\Scopes\LatestScope;
-use Illuminate\Database\Eloquent\Builder;
+use App\Scopes\DeletedAdminScope;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogPost extends Model
@@ -66,6 +67,11 @@ class BlogPost extends Model
         // postのrestoreの前に関連するcommentもrestore
         static::restoring(function (BlogPost $blogPost) {
             $blogPost->comments()->restore();
+        });
+
+        // post更新時にcache削除
+        static::updating(function (BlogPost $blogPost) {
+            Cache::forget("blog-post-{$blogPost->id}");
         });
     }
 }
