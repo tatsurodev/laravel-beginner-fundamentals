@@ -8,6 +8,7 @@ class Tag extends Model
 {
     public function blogPosts()
     {
-        return $this->belongsToMany('App\BlogPost');
+        // withTimestampsでtimestamps追加、asで中間テーブル名をpivotから変更
+        return $this->belongsToMany('App\BlogPost')->withTimestamps()->as('tagged');
     }
 }
