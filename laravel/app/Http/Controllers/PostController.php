@@ -67,7 +67,7 @@ class PostController extends Controller
         // withCount('relation')で、relation数をrelation_count fieldをモデルに追加できる
         // local scope latestを使用
         return view('posts.index', [
-            'posts' => BlogPost::latest()->withCount('comments')->with('user')->get(),
+            'posts' => BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get(),
             'mostCommented' => $mostCommented,
             'mostActive' => $mostActive,
             'mostActiveLastMonth' => $mostActiveLastMonth,
@@ -93,7 +93,7 @@ class PostController extends Controller
                 // }]
                 // BlogPost modelのcomments relation取得時にlocal scopeのlatestを適用している
                 'comments'
-            )->findOrFail($id);
+            )->with('tags')->with('user')->findOrFail($id);
         });
 
         // session idを取得
