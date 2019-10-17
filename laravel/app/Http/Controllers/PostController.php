@@ -53,24 +53,11 @@ class PostController extends Controller
         dd(DB::getQueryLog());
         */
 
-        // remember(cache_name, minites, function(){})
-        $mostCommented = Cache::tags(['blog-post'])->remember('blog-post-commented', now()->addSeconds(60 * 60), function () {
-            return BlogPost::mostCommented()->take(5)->get();
-        });
-        $mostActive = Cache::remember('users-most-active', now()->addSeconds(60 * 60), function () {
-            return User::withMostBlogPosts()->take(5)->get();
-        });
-        $mostActiveLastMonth = Cache::remember('users-most-active-last-month', now()->addSeconds(60 * 60), function () {
-            return User::withMostBlogPostsLastMonth()->take(5)->get();
-        });
         // comments数も一緒に渡す
         // withCount('relation')で、relation数をrelation_count fieldをモデルに追加できる
         // local scope latestを使用
         return view('posts.index', [
             'posts' => BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get(),
-            'mostCommented' => $mostCommented,
-            'mostActive' => $mostActive,
-            'mostActiveLastMonth' => $mostActiveLastMonth,
         ]);
     }
 
