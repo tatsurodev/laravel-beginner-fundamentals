@@ -36,5 +36,6 @@ class AppServiceProvider extends ServiceProvider
         // 2. AppServiceProvider or 他のServiceProviderに登録の際、view composerの処理をclosureで指定
         // 下記は1のやり方で、View::composer()でもおｋ
         view()->composer(['posts.index', 'posts.show'], ActivityComposer::class);
+        // view()->composer('*', ActivityComposer::class);
     }
 }
