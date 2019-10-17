@@ -89,7 +89,7 @@
                         @slot('subtitle')
                             Users with most posts written in the month
                         @endslot
-                        @slot('items', $mostActiveLastMonth->pluck('name'))
+                        @slot('items', collect($mostActiveLastMonth)->pluck('name'))
                     @endcard
                 </div>
             </div>
