@@ -57,7 +57,7 @@ class PostController extends Controller
         // withCount('relation')で、relation数をrelation_count fieldをモデルに追加できる
         // local scope latestを使用
         return view('posts.index', [
-            'posts' => BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get(),
+            'posts' => BlogPost::latestwithRelations()->get(),
         ]);
     }
 
