@@ -164,6 +164,20 @@ class PostController extends Controller
         // 上下は同値
         // session()->flash('status', 'Blog post was created!');
 
+        $hasFile = $request->hasFile('thumbnail');
+        dump($hasFile);
+        if ($hasFile) {
+            $file = $request->file('thumbnail');
+            dump($file);
+            // mime type取得
+            dump($file->getClientMimeType());
+            // 拡張子取得
+            dump($file->getClientOriginalExtension());
+            // storeで保存後pathが返ってくる
+            dump($file->store('thumbnails'));
+        }
+        die;
+
         return redirect()->route('posts.show', ['post' => $blogPost->id]);
         // 上下は同値
         // return redirect(route('posts.show', ['post' => $blogPost->id]));
