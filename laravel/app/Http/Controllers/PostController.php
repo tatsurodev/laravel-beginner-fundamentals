@@ -79,8 +79,12 @@ class PostController extends Controller
                 //     return $query->latest();
                 // }]
                 // BlogPost modelのcomments relation取得時にlocal scopeのlatestを適用している
-                'comments'
-            )->with('tags')->with('user')->findOrFail($id);
+                'comments',
+                'tags',
+                'user',
+                // nested relaton
+                'comments.user'
+            )->findOrFail($id);
         });
 
         // session idを取得
