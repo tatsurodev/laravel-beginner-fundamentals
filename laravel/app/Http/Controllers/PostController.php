@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Image;
 use App\BlogPost;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePost;
@@ -158,6 +159,7 @@ class PostController extends Controller
         // $blogPost->save();
 
         // static methodのcreateでmass assignment
+        // create methodでmodelをdbに保存、save methodは必要なし
         $blogPost = BlogPost::create($validatedData);
 
         // sessionでメッセージ格納
@@ -165,28 +167,33 @@ class PostController extends Controller
         // 上下は同値
         // session()->flash('status', 'Blog post was created!');
 
-        $hasFile = $request->hasFile('thumbnail');
-        dump($hasFile);
-        if ($hasFile) {
-            $file = $request->file('thumbnail');
-            dump($file);
+        if ($request->hasFile('thumbnail')) {
+            // diskが指定されていないのでdefaultのpublicが使用される
+            $path = $request->file('thumbnail')->store('thumbnails');
+            // dump($file);
             // mime type取得
-            dump($file->getClientMimeType());
+            // dump($file->getClientMimeType());
             // 拡張子取得
-            dump($file->getClientOriginalExtension());
+            // dump($file->getClientOriginalExtension());
             // storeで保存後pathが返ってくる
             // Storage facades使用時、disk methodを指定しないときはFILESYSTEM_DRIVERのdefault値が使用される
-            dump($file->store('thumbnails'));
+            // dump($file->store('thumbnails'));
             // この上下は同値
-            dump(Storage::disk('public')->putFile('thumbnails', $file));
+            // dump(Storage::disk('public')->putFile('thumbnails', $file));
             // 保存file名取得
-            $name1 = $file->storeAs('thumbnails', $blogPost->id . '.' . $file->guessClientExtension());
+            // $name1 = $file->storeAs('thumbnails', $blogPost->id . '.' . $file->guessClientExtension());
             // localは公開の必要のないfileに、publicは公開するfileに主に使用
-            $name2 = Storage::disk('local')->putFileAs('thumbnails', $file, $blogPost->id . '.' . $file->guessClientExtension());
-            dump(Storage::url($name1));
-            dump(Storage::disk('local')->url($name2));
+            // $name2 = Storage::disk('local')->putFileAs('thumbnails', $file, $blogPost->id . '.' . $file->guessClientExtension());
+            // dump(Storage::url($name1));
+            // dump(Storage::disk('local')->url($name2));
+
+            // save methodでrelationを保存
+            // 親instance->relation()->save(子instance);
+            $blogPost->image()->save(
+                Image::create(['path' => $path])
+            );
         }
-        die;
+        // die;
 
         return redirect()->route('posts.show', ['post' => $blogPost->id]);
         // 上下は同値

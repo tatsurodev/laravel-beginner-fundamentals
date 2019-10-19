@@ -35,6 +35,11 @@ class BlogPost extends Model
         return $this->belongsToMany('App\Tag')->withTimestamps();
     }
 
+    public function image()
+    {
+        return $this->hasOne('App\Image');
+    }
+
     // local scope作成
     public function scopeLatest(Builder $query)
     {
