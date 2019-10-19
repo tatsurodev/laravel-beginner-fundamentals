@@ -180,9 +180,11 @@ class PostController extends Controller
             // この上下は同値
             dump(Storage::disk('public')->putFile('thumbnails', $file));
             // 保存file名取得
-            dump($file->storeAs('thumbnails', $blogPost->id . '.' . $file->guessClientExtension()));
+            $name1 = $file->storeAs('thumbnails', $blogPost->id . '.' . $file->guessClientExtension());
             // localは公開の必要のないfileに、publicは公開するfileに主に使用
-            dump(Storage::disk('local')->putFileAs('thumbnails', $file, $blogPost->id . '.' . $file->guessClientExtension()));
+            $name2 = Storage::disk('local')->putFileAs('thumbnails', $file, $blogPost->id . '.' . $file->guessClientExtension());
+            dump(Storage::url($name1));
+            dump(Storage::disk('local')->url($name2));
         }
         die;
 

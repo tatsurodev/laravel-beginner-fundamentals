@@ -50,8 +50,10 @@ return [
 
         'public' => [
             'driver' => 'local',
+            // 保存先 app_root/storage/以下に指定したpathで保存される
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            // 公開先 .envのAPP_URL/STORAGE/file名でアクセスできる、このurl(file上はpublic/storage)から上のrootへsymbolic linkが貼られる
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
 
