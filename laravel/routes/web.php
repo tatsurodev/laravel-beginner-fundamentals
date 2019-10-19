@@ -64,8 +64,10 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
 // exceptで除外するactionを指定
 // Route::resource('/posts', 'PostController')->except(['destroy']);
 
-Route::resource('/posts', 'PostController');
+Route::resource('posts', 'PostController');
 // tag検索
 Route::get('/posts/tag/{tag}', 'PostTagController@index')->name('posts.tags.index');
+
+Route::resource('posts.comments', 'PostCommentController')->only(['store']);
 
 Auth::routes();

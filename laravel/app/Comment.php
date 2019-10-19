@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Scopes\LatestScope;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     use SoftDeletes;
+
+    protected $fillable = ['user_id', 'content'];
 
     // 子のblog_post_idと親のidの間にrelation作成
     public function blogPost()
@@ -31,5 +34,11 @@ class Comment extends Model
     {
         parent::boot();
         // static::addGlobalScope(new LatestScope);
+
+        // comment作成時に、relationからcacheされたblog-postを削除、でないと新たなcommentが反映されない
+        static::creating(function (Comment $comment) {
+            Cache::tags(['blog-post'])->forget("blog-post-{$comment->blog_post_id}");
+            Cache::tags(['blog-post'])->forget('mostCommented');
+        });
     }
 }

@@ -67,6 +67,7 @@ class BlogPost extends Model
         static::deleting(function (BlogPost $blogPost) {
             // postとrelationのあるcommentが削除される
             $blogPost->comments()->delete();
+            Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });
 
         // postのrestoreの前に関連するcommentもrestore
@@ -76,7 +77,7 @@ class BlogPost extends Model
 
         // post更新時にcache削除
         static::updating(function (BlogPost $blogPost) {
-            Cache::forget("blog-post-{$blogPost->id}");
+            Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });
     }
 }
