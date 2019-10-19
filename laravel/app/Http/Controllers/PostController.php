@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePost;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\DB;
 
 // actionとpolicyの対応
@@ -174,7 +175,14 @@ class PostController extends Controller
             // 拡張子取得
             dump($file->getClientOriginalExtension());
             // storeで保存後pathが返ってくる
+            // Storage facades使用時、disk methodを指定しないときはFILESYSTEM_DRIVERのdefault値が使用される
             dump($file->store('thumbnails'));
+            // この上下は同値
+            dump(Storage::disk('public')->putFile('thumbnails', $file));
+            // 保存file名取得
+            dump($file->storeAs('thumbnails', $blogPost->id . '.' . $file->guessClientExtension()));
+            // localは公開の必要のないfileに、publicは公開するfileに主に使用
+            dump(Storage::disk('local')->putFileAs('thumbnails', $file, $blogPost->id . '.' . $file->guessClientExtension()));
         }
         die;
 
