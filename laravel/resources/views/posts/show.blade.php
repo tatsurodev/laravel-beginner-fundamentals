@@ -3,7 +3,12 @@
 @section('content')
 <div class="row">
     <div class="col-8">
-        <h1>
+        @if($post->image)
+            <div style="background-image: url('{{ $post->image->url() }}'); min-height: 500px; color: white; text-align:center; background-attachment: fixed;">
+                <h1 style="padding-top: 100px; text-shadow: 1px 2px #000">
+        @else
+            <h1>
+        @endif
             {{ $post->title }}
             {{-- slotへdataの配列を渡す --}}
             {{-- @badge(['type' => 'primary']) --}}
@@ -21,7 +26,13 @@
                 @endslot
             @endcomponent
             -->
-        </h1>
+        @if($post->image)
+                </h1>
+            </div>
+        @else
+            </h1>
+        @endif
+
         <p>{{ $post->content }}</p>
 
         {{--
@@ -29,8 +40,8 @@
         <img src="{{ asset($post->image->path) }}"> <!-- js, css等でよく使用するapp_root/publicへのリンク -->
         <!-- 上記の２つはdisk('public')等保存場所を変更した場合影響を受けるが、下２つの方法は.envのFILESYSTEM_DRIVERの変更、もしくはStorage::disk('変更場所')->url()で変更できるため変更に強い -->
         <img src="{{ Storage::url($post->image->path) }}">
-        --}}
         <img src="{{ $post->image->url() }}">
+        --}}
 
         {{-- diffForHumansで人にわかりやすい形式で表示 --}}
         @updated(['date' => $post->created_at, 'name' => $post->user->name])
