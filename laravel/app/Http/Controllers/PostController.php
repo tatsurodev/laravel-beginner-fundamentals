@@ -222,7 +222,24 @@ class PostController extends Controller
         $validatedData = $request->validated();
         // 既にあるinstanceに対するmass assignmentはfill methodを使用
         $post->fill($validatedData);
-        $post->save();
+
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('thumbnails');
+            // postにthumbnailが既に設定してあれば、既存の画像を削除
+            if ($post->image) {
+                // 画像fileの削除
+                Storage::delete($post->image->path);
+                // 画像dataの更新
+                $post->image->path = $path;
+                $post->image->save();
+            } else {
+                // thumbnailがなければ新たに保存
+                $post->image()->save(
+                    Image::create(['path' => $path])
+                );
+            }
+        }
+
         $request->session()->flash('status', 'Blog post was updated!');
         return redirect()->route('posts.show', ['post' => $post->id]);
     }
