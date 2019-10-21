@@ -44,7 +44,7 @@
         --}}
 
         {{-- diffForHumansで人にわかりやすい形式で表示 --}}
-        @updated(['date' => $post->created_at, 'name' => $post->user->name])
+        @updated(['date' => $post->created_at, 'name' => $post->user->name, 'userId' => $post->user->id])
         @endupdated
         @updated(['date' => $post->created_at,])
             Updated
