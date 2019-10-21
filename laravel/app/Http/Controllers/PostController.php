@@ -190,7 +190,8 @@ class PostController extends Controller
             // save methodでrelationを保存
             // 親instance->relation()->save(子instance);
             $blogPost->image()->save(
-                Image::create(['path' => $path])
+                // BlogPost, Image model間にpolymorphic relationがあるのでImage::create()でimageable_id, imageable_typeを指定せずにcreate methodを使うとエラーとなるので、Image::makeで一旦メモリー上にinstanceを作成し、$blogPost->image()のrelationでlaravelに上記の2つのfieldをセットさせる
+                Image::make(['path' => $path])
             );
         }
         // die;
@@ -235,7 +236,7 @@ class PostController extends Controller
             } else {
                 // thumbnailがなければ新たに保存
                 $post->image()->save(
-                    Image::create(['path' => $path])
+                    Image::make(['path' => $path])
                 );
             }
         }
