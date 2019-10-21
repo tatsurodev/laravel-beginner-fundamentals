@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Image;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateUser;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -72,9 +75,25 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUser $request, User $user)
     {
-        dd($user);
+        if ($request->hasFile('avatar')) {
+            // avatars folderに画像格納、file名をreturn
+            $path = $request->file('avatar')->store('avatars');
+            // もし元画像があれば、元画像削除、更新
+            if ($user->image) {
+                Storage::delete($user->image->path);
+                $user->image->path = $path;
+                $user->image->save();
+                // 初めて画像セットする場合
+            } else {
+                $user->image()->save(
+                    Image::make(['path' => $path])
+                );
+            }
+        }
+
+        return redirect()->back()->withStatus('Profile image was updated!');
     }
 
     /**

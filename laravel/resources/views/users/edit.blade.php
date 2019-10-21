@@ -6,7 +6,7 @@
         @method('put')
         <div class="row">
             <div class="col-4">
-                <img src="" class="img-thumbnail avatar">
+                <img src="{{ $user->image ? $user->image->url() : '' }}" class="img-thumbnail avatar">
                 <div class="card mt-4">
                     <div class="card-body">
                         <h6>Upload a different photo</h6>
@@ -19,6 +19,8 @@
                     <label for="">Name: </label>
                     <input type="text" value="" name="name" class="form-control">
                 </div>
+                @errors
+                @enderrors
                 <div class="form-group">
                     <input type="submit" value="Save Changes" class="btn btn-primary">
                 </div>
