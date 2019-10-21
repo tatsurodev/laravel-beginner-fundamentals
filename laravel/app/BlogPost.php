@@ -35,9 +35,10 @@ class BlogPost extends Model
         return $this->belongsToMany('App\Tag')->withTimestamps();
     }
 
+    // one to one polymorphic relation作成、morphOne('子クラス名', '子クラスでリンクするid fieldのprefix')
     public function image()
     {
-        return $this->hasOne('App\Image');
+        return $this->morphOne('App\Image', 'imageable');
     }
 
     // local scope作成
