@@ -15,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
         'App\BlogPost' => 'App\Policies\BlogPostPolicy',
+        'App\User ' => 'App\Policies\UserPolicy',
     ];
 
     /**
@@ -55,9 +56,9 @@ class AuthServiceProvider extends ServiceProvider
         // gate checkがcallされる前にこの処理が呼ばれる
         Gate::before(function ($user, $ability) {
             // userがadminかつ、リストの中にあるabilityは、gateをpassできる
-            if ($user->is_admin && in_array($ability, ['update', 'delete'])) {
-                return true;
-            }
+            // if ($user->is_admin && in_array($ability, ['update', 'delete'])) {
+            //     return true;
+            // }
         });
 
         // gete check後にafterが呼ばれ、gate checkの結果が第三引数$resultに格納され、通常のgate checkが終わった後でもこのGate::afterで結果をまだ変えることができる
