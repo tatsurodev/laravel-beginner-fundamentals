@@ -43,9 +43,17 @@ class User extends Authenticatable
         return $this->hasMany('App\BlogPost');
     }
 
+    // blog postに対するcomments
     public function comments()
     {
         return $this->hasMany('App\Comment');
+    }
+
+    // userに対するcomments, one to manyのpolymorphic relation
+    public function commentsOn()
+    {
+        // latest scopeはComment modelで定義されているscopeだが使えるっぽい
+        return $this->morphMany('App\Comment', 'commentable')->latest();
     }
 
     public function image()

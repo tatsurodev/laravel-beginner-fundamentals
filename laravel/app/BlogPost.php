@@ -21,8 +21,9 @@ class BlogPost extends Model
 
     public function comments()
     {
+        // one to manyのpolymorphic relation
         // local scope使用
-        return $this->hasMany('App\Comment')->latest();
+        return $this->morphMany('App\Comment', 'commentable')->latest();
     }
 
     public function user()
