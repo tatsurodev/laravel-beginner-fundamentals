@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\ActivityComposer;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // indexをつける時、defaultのstringだと255文字数*4bytes = 計1020bytesでindexにつけられる767 bytesの上限を超えてしまうので、「max key length is 767 bytes」のエラーが発生する。よってdefault stringの文字列数を767bytes以内になるようにstringの文字数を変更する
+        Schema::defaultStringLength(191);
         // componentにaliasを作成する、Blade::component(component path, alias name)
         Blade::component('components.badge', 'badge');
         Blade::component('components.updated', 'updated');
