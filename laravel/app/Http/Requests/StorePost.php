@@ -27,6 +27,8 @@ class StorePost extends FormRequest
             // bailでvalidationに失敗した時に残りの判定も停止できる
             'title' => 'bail|min:5|required|max:100',
             'content' => 'required|min:10',
+            // dimensions:ration ration=width/height
+            'thumbnail' => 'image|mimes:jpg,jpeg,png,gif,svg|max:1024|dimensions:min_height=500',
         ];
     }
 }
