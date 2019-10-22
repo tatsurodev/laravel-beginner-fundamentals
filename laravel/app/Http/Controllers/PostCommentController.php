@@ -20,6 +20,7 @@ class PostCommentController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
-        return redirect()->back()->withStatus('status', 'Comment was created!');
+        // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
+        return redirect()->back()->withStatus('Comment was created!');
     }
 }

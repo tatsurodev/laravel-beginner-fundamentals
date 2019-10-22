@@ -20,6 +20,6 @@ class UserCommentController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
-        return redirect()->back()->withStatus('status', 'Comment was created!');
+        return redirect()->back()->withStatus('Comment was created!');
     }
 }

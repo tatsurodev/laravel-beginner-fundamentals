@@ -44,8 +44,8 @@ class Comment extends Model
 
         // comment作成時に、relationからcacheされたblog-postを削除、でないと新たなcommentが反映されない
         static::creating(function (Comment $comment) {
-            // commentはuserに対するものもあるのでblog-postの時だけblog-postのキャッシュをクリア
-            if ($comment->commentable_type === App\BlogPost::class) {
+            // commentはuserに対するものもあるのでblog-postの時だけblog-postのキャッシュをクリア。Comment,BlogPost modelは同じnamespace上にあるのでApp\BlogPost::classは間違い
+            if ($comment->commentable_type === BlogPost::class) {
                 Cache::tags(['blog-post'])->forget("blog-post-{$comment->commentable_id}");
                 Cache::tags(['blog-post'])->forget('mostCommented');
             }
