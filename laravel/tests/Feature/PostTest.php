@@ -45,11 +45,15 @@ class PostTest extends TestCase
     public function testSee1BlogPostWithComments()
     {
         // arrange
+        // commentするuser
+        $user = $this->user();
         $post = $this->createDummyBlogPost();
         // factory(クラス, 作成数)->make() or create()、作成数は省略すると1
         // create methodに配列を渡すことでモデルの属性をoverride
         factory(Comment::class, 4)->create([
-            'blog_post_id' => $post->id,
+            'commentable_id' => $post->id,
+            'commentable_type' => 'App\BlogPost',
+            'user_id' => $user->id,
         ]);
         // act
         $response = $this->get('/posts');

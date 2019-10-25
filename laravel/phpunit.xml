@@ -39,6 +39,8 @@
         <server name="APP_EVENTS_CACHE" value="bootstrap/cache/events.phpunit.php"/>
 
         <!-- phpunit test用の環境変数を上書きしたい場合、このphpunit.xmlに記述する。なければ、.envファイルにある特にテスト用でないdefaultの環境変数が使われる -->
-        <server name="DB_CONNECTION" value="sqlite_testing"/>
+        <!-- <server name="DB_CONNECTION" value="sqlite_testing"/> -->
+        <server name="DB_CONNECTION" value="mysql_testing"/>
+        <server name="DB_DATABASE" value="laravel_testing"/>
     </php>
 </phpunit>

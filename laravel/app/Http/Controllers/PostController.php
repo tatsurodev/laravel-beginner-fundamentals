@@ -245,6 +245,7 @@ class PostController extends Controller
             }
         }
 
+        $post->save();
         $request->session()->flash('status', 'Blog post was updated!');
         return redirect()->route('posts.show', ['post' => $post->id]);
     }
@@ -265,10 +266,5 @@ class PostController extends Controller
 
         $request->session()->flash('status', 'Blog post was deleted!');
         return redirect()->route('posts.index');
-
-        $post->fill($validated);
-        $post->fill($request->validated());
-        $post->fill($request->validated);
-        $post->save();
     }
 }
