@@ -31,7 +31,8 @@ class AddPolymorphToCommentsTable extends Migration
         Schema::table('comments', function (Blueprint $table) {
             $table->dropMorphs('commentable');
 
-            $table->unsignedBigInteger('blog_post_id')->index();
+            // comments tableにrecordは既にあるので外部キー設定時になにかしら値を設定するか、null okにするしかない。nullable()を設定しないと外部キーの制約エラーが出るので注意
+            $table->unsignedBigInteger('blog_post_id')->index()->nullable();
             $table->foreign('blog_post_id')->references('id')->on('blog_posts');
         });
     }
