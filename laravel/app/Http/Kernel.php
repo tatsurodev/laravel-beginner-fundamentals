@@ -13,6 +13,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+    // 全処理に適用したいmiddleware
     protected $middleware = [
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\CheckForMaintenanceMode::class,
@@ -26,8 +27,9 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+    // 登録されたmiddlewareがそれぞれのgroupに対して適用される
     protected $middlewareGroups = [
-        // web.phpにあるrouteに適用されるmiddleware
+        // web.phpに記述してある全routeに適用したいmiddleware
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -51,6 +53,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+    // 単体で使用するmiddlewareの登録、登録したmiddleware名で使用
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
@@ -70,6 +73,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+    // middlewareの実行順序を指定できる
     protected $middlewarePriority = [
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,

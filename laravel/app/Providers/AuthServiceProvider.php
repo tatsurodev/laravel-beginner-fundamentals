@@ -53,7 +53,7 @@ class AuthServiceProvider extends ServiceProvider
         // Gate::resource('posts', 'App\Policies\BlogPostPolicy');
 
         // admin userに特定のabilityを付与
-        // gate checkがcallされる前にこの処理が呼ばれる
+        // gate checkがcallされる前にこの処理が呼ばれ、返り値がnull以外ならその他のgateのチェック関係なくその値が認可の結果となる。返り値がtrueなら認可、falseなら禁止、nullならなにも影響を与えない(他のpolicy等で決まる)
         Gate::before(function ($user, $ability) {
             // userがadminかつ、リストの中にあるabilityは、gateをpassできる
             // if ($user->is_admin && in_array($ability, ['update', 'delete'])) {

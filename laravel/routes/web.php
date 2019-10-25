@@ -28,7 +28,7 @@ Route::get('/', 'HomeController@home')
 
 Route::get('/contact', 'HomeController@contact')->name('contact');
 
-// routeにhome.secret gate middleware設定
+// routeにcan middlewareのhome.secretを設定、第一引数にgate名、第二引数にgate, policyに渡したいroute param名
 Route::get('/secret', 'HomeController@secret')->name('secret')->middleware('can:home.secret');
 
 // パラメーター名にハイフンは使えない
@@ -58,6 +58,7 @@ Route::get('/blog-post/{id}/{welcome?}', function ($id, $welcome = 1) {
 // 上記ロジックをcontrollerへ移動
 // Route::get('/blog-post/{id}/{welcome?}', 'HomeController@blogPost')->name('blog-post');
 
+// resource methodを使用すると一気にURI, route parameter, named route等を設定してくれるので便利、使用するアクションのみonly、exceptで絞り込む
 // onlyで使用するアクションのみ指定
 // Route::resource('/posts', 'PostController')->only(['index', 'show', 'create', 'store', 'edit', 'update']);
 // 上下は同値

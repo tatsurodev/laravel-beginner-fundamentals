@@ -71,8 +71,9 @@ class PostController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // sessionの復元, session()->reflash()でもおｋ
+        // reflash methodで全フラッシュデータを次のリクエストまで持続
         // $request->session()->reflash();
+        // session()->reflash();
         $blogPost = Cache::tags(['blog-post'])->remember("blog-post-{$id}", 60, function () use ($id) {
             // findメソッドだと無効な$idを受け取った時にエラーとなるのでfindOrFailメソッドを使用する
             return BlogPost::with(
@@ -214,14 +215,17 @@ class PostController extends Controller
     public function update(StorePost $request, $id)
     {
         $post = BlogPost::findOrFail($id);
-        // gateでauthrization
+        // 権限のチェックは、Gate::allowsとGate::deniesがあるが、deniesで権限のないuserをactionの最初にabortで飛ばして、残りの通ったuserのみ処理を許可する方が簡単
         // if (Gate::denies('update-post', $post)) {
         //     // abort(status, msg)
         //     abort(403, "You can't edit this blog post!");
         // }
+        // authorize methodは、Gate::deniesの簡略版、権限無しで403を返す
+        // $this->authorize('gate-name', $post);
         $this->authorize($post);
         $validatedData = $request->validated();
         // 既にあるinstanceに対するmass assignmentはfill methodを使用
+        // fillは、$post->title = 'title'; $post->content = 'content'; ... と個別に指定するより早いが、複数代入に使うだけなのでsave()が必要
         $post->fill($validatedData);
 
         if ($request->hasFile('thumbnail')) {
@@ -261,5 +265,10 @@ class PostController extends Controller
 
         $request->session()->flash('status', 'Blog post was deleted!');
         return redirect()->route('posts.index');
+
+        $post->fill($validated);
+        $post->fill($request->validated());
+        $post->fill($request->validated);
+        $post->save();
     }
 }

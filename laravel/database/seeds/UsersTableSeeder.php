@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
         $usersCount = max((int) $this->command->ask('How many users would you like? min is 1.', 20), 1);
 
 
-        // login用ユーザー
+        // admin用ユーザー作成、states methodで複数のstateを指定できる
         // $admin = factory(App\User::class)->states('admin')->create();
         factory(App\User::class)->states('admin')->create();
 

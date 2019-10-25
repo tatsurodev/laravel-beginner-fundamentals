@@ -38,7 +38,7 @@
         <server name="APP_ROUTES_CACHE" value="bootstrap/cache/routes.phpunit.php"/>
         <server name="APP_EVENTS_CACHE" value="bootstrap/cache/events.phpunit.php"/>
 
-        <!-- .envファイルにある本番環境以外でtest用の環境変数を定義したい場合、phpunit.xmlに記述する -->
+        <!-- phpunit test用の環境変数を上書きしたい場合、このphpunit.xmlに記述する。なければ、.envファイルにある特にテスト用でないdefaultの環境変数が使われる -->
         <server name="DB_CONNECTION" value="sqlite_testing"/>
     </php>
 </phpunit>

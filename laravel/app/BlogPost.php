@@ -11,12 +11,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogPost extends Model
 {
-    // 下記で関連付けるテーブル名を指定、BlogPostモデルはデフォルトだとlaravelが自動的にblog_postsテーブルを参照する
+    // 命名規則通りなら自動的にmodelとtableは紐付けられる
+    // model名: 単数、アッパーキャメルケース(パスカルケース) ex.BlogPost, AccessRanking
+    // table名: 複数、スネークケース ex. blog_posts, access_rankings
+    // 命名規則外の場合、下記で関連付けるテーブル名を指定できる
     // protected $table = 'blogposts';
 
     // softdelete使用
     use SoftDeletes;
 
+    // Model::create()で複数代入を行うときは、$fillable(ホワイトリスト、追加して良いカラム) or $guarded(ブラックリスト、追加してはいけないカラム)の指定が必須
     protected $fillable = ['title', 'content', 'user_id'];
 
     public function comments()
@@ -73,11 +77,14 @@ class BlogPost extends Model
         // recordのdeleteにはdb的に２つの意味がある、softdeletとcascade
         // softdelete: recordにdeleted_atをつけただけで物理的には削除されていない
         // cascade: dbの子tableの外部キーにcascadeをつけて参照先の親のrecordが削除された時に共に物理的にも削除する
-        // このprojectでは、最終的に下記のevent listenerでpostのdelete, restore時に関連するcommentをsofltdeleteし、またforcedeleteされた場合は、comments tableのmigration fileで設定されたcascadeで関連するcommentを物理的に削除している
+        // このprojectでは、最終的にsoftDeletesされた時は、下記のevent listenerでpostのdelete, restore時に関連するcommentをsofltdelete, restoreし、またforcedeleteされた時は、comments tableのmigration fileで設定されたcascadeで関連するcommentを物理的に削除している
+
         // delete event前にclosureの中の処理(postに関連するcommentの削除)が実行される
-        // staticで遅延静的束縛
+        // staticで遅延静的束縛(https://note.mu/gallu/n/n3da09e4ce43e)
+        // $this-> : インスタンス化したオブジェクトへの参照、self:: : 使われた場所の自クラスへの参照(親クラスのmethodでselfが使われた時、子クラスで呼び出すと親クラスの参照が得られる)、static: 呼び出し元への参照(親クラスのmethodでselfが使われた時、子クラスで呼び出すと子クラスの参照が得られる)
         static::deleting(function (BlogPost $blogPost) {
             // postとrelationのあるcommentが削除される
+            // 取得したモデルをdeleteで削除(複数可)、idで削除する場合はdestoryを使用(複数可)
             $blogPost->comments()->delete();
             Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });

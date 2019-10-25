@@ -30,6 +30,7 @@
             <a class="p-2 text-dark" href="{{ route('posts.create') }}">Add</a>
 
             @guest
+                {{-- B TO B向けのサイト等だとサイト管理者がユーザー登録を行い、ユーザー自体が登録できないような仕様がある。このような時、Route::has methodでregister routeがある場合のみ、register用リンクが表示されるようにする --}}
                 @if (Route::has('register'))
                     <a class="p-2 text-dark" href="{{ route('register') }}">Register</a>
                 @endif

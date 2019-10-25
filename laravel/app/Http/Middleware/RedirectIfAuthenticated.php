@@ -17,7 +17,8 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        // login済の場合のredirect先
+        // LoginControllerの$redirectToはlogin後のredirect先
+        // こっちのredirectは、route('login')にアクセスした時、既にlogin済の場合のredirect先
         if (Auth::guard($guard)->check()) {
             return redirect('/');
         }
