@@ -37,7 +37,7 @@ class BlogPost extends Model
 
     public function tags()
     {
-        return $this->belongsToMany('App\Tag')->withTimestamps();
+        return $this->morphToMany('App\Tag', 'taggable')->withTimestamps();
     }
 
     // one to one polymorphic relation作成、morphOne('子クラス名', '子クラスでリンクするid fieldのprefix')
