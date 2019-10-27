@@ -25,7 +25,7 @@ class Comment extends Model
     // BlogPost, User model間にone to manyのpolymorphic relation作成
     public function commentable()
     {
-        return $this->mortTo();
+        return $this->morphTo();
     }
 
     public function user()
