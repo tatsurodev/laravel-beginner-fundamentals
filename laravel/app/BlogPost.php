@@ -4,6 +4,7 @@ namespace App;
 
 use App\Scopes\LatestScope;
 use App\Scopes\DeletedAdminScope;
+use App\Traits\Taggable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +19,7 @@ class BlogPost extends Model
     // protected $table = 'blogposts';
 
     // softdelete使用
-    use SoftDeletes;
+    use SoftDeletes, Taggable;
 
     // Model::create()で複数代入を行うときは、$fillable(ホワイトリスト、追加して良いカラム) or $guarded(ブラックリスト、追加してはいけないカラム)の指定が必須
     protected $fillable = ['title', 'content', 'user_id'];
@@ -33,11 +34,6 @@ class BlogPost extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
-    }
-
-    public function tags()
-    {
-        return $this->morphToMany('App\Tag', 'taggable')->withTimestamps();
     }
 
     // one to one polymorphic relation作成、morphOne('子クラス名', '子クラスでリンクするid fieldのprefix')
