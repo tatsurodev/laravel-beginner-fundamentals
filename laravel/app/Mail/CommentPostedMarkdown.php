@@ -8,8 +8,8 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-// ShouldQueueでprocessをbackgroundへ
-class CommentPostedMarkdown extends Mailable implements ShouldQueue
+// ShouldQueueをimplementsすることででprocessをbackgroundへ
+class CommentPostedMarkdown extends Mailable
 {
     use Queueable, SerializesModels;
 

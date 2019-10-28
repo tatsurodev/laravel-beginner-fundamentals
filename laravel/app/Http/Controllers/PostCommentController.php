@@ -23,11 +23,19 @@ class PostCommentController extends Controller
             'user_id' => $request->user()->id,
         ]);
         // mail送信
-        Mail::to($post->user)->send(
-            // 作成したcomment instanceをCommentPostedのconstructorに渡してcomment propertyにセット
-            // new CommentPosted($comment)
-            new CommentPostedMarkdown($comment)
-        );
+        // Mail::to($post->user)->send(
+        //     // 作成したcomment instanceをCommentPostedのconstructorに渡してcomment propertyにセット
+        //     // new CommentPosted($comment)
+        //     new CommentPostedMarkdown($comment)
+        // );
+
+        // メール送信時間を指定
+        $when = now()->addMinutes(1);
+
+        // queueへ送る
+        // Mail::to($post->user)->queue(new CommentPostedMarkdown($comment));
+        // later methodで時間差送信
+        Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
     }
