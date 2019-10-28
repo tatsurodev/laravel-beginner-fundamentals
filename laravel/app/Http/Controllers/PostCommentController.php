@@ -26,7 +26,7 @@ class PostCommentController extends Controller
         Mail::to($post->user)->send(
             // 作成したcomment instanceをCommentPostedのconstructorに渡してcomment propertyにセット
             // new CommentPosted($comment)
-            new CommentPostedMarkdown()
+            new CommentPostedMarkdown($comment)
         );
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
