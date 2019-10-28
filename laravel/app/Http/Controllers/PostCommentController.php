@@ -6,6 +6,7 @@ use App\BlogPost;
 use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreComment;
+use App\Mail\CommentPostedMarkdown;
 use Illuminate\Support\Facades\Mail;
 
 class PostCommentController extends Controller
@@ -24,7 +25,8 @@ class PostCommentController extends Controller
         // mail送信
         Mail::to($post->user)->send(
             // 作成したcomment instanceをCommentPostedのconstructorに渡してcomment propertyにセット
-            new CommentPosted($comment)
+            // new CommentPosted($comment)
+            new CommentPostedMarkdown()
         );
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
