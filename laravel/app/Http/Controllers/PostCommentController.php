@@ -39,9 +39,9 @@ class PostCommentController extends Controller
         // later methodで時間差送信
         // Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
 
-        ThrottledMail::dispatch(new CommentPostedMarkdown($comment), $post->user);
+        ThrottledMail::dispatch(new CommentPostedMarkdown($comment), $post->user)->onQueue('high');
 
-        NotifyUsersPostWasCommented::dispatch($comment);
+        NotifyUsersPostWasCommented::dispatch($comment)->onQueue('low');
 
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
