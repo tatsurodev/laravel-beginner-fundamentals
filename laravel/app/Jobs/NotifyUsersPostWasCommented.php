@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\User;
 use App\Comment;
+use App\Jobs\ThrottledMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
@@ -34,11 +35,22 @@ class NotifyUsersPostWasCommented implements ShouldQueue
      */
     public function handle()
     {
+        // $now = now();
+        // User::thatHasCommentedOnPost($this->comment->commentable)->get()->filter(function (User $user) {
+        //     return $user->id !== $this->comment->user_id;
+        // })->map(function (User $user) use ($now) {
+        //     Mail::to($user)->later(
+        //         $now->addSeconds(6),
+        //         new CommentPostedOnPostWatched($this->comment, $user)
+        //     );
+        // });
+
         User::thatHasCommentedOnPost($this->comment->commentable)->get()->filter(function (User $user) {
             return $user->id !== $this->comment->user_id;
         })->map(function (User $user) {
-            Mail::to($user)->send(
-                new CommentPostedOnPostWatched($this->comment, $user)
+            ThrottledMail::dispatch(
+                new CommentPostedOnPostWatched($this->comment, $user),
+                $user
             );
         });
     }
