@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\Comment;
+use App\BlogPost;
+use App\Observers\BlogPostObserver;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\ActivityComposer;
-use Illuminate\Support\Facades\Schema;
+use App\Observers\CommentObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,5 +47,9 @@ class AppServiceProvider extends ServiceProvider
         // 下記は1のやり方で、View::composer()でもおｋ
         view()->composer(['posts.index', 'posts.show'], ActivityComposer::class);
         // view()->composer('*', ActivityComposer::class);
+
+        // observerの登録
+        BlogPost::observe(BlogPostObserver::class);
+        Comment::observe(CommentObserver::class);
     }
 }

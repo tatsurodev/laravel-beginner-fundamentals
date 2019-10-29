@@ -38,18 +38,19 @@ class Comment extends Model
         return $query->orderBy(static::CREATED_AT, 'desc');
     }
 
-    public static function boot()
-    {
-        parent::boot();
-        // static::addGlobalScope(new LatestScope);
+    // eventをobserverに移動させたのでboot methodはもう不要
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     // static::addGlobalScope(new LatestScope);
 
-        // comment作成時に、relationからcacheされたblog-postを削除、でないと新たなcommentが反映されない
-        static::creating(function (Comment $comment) {
-            // commentはuserに対するものもあるのでblog-postの時だけblog-postのキャッシュをクリア。Comment,BlogPost modelは同じnamespace上にあるのでApp\BlogPost::classは間違い
-            if ($comment->commentable_type === BlogPost::class) {
-                Cache::tags(['blog-post'])->forget("blog-post-{$comment->commentable_id}");
-                Cache::tags(['blog-post'])->forget('mostCommented');
-            }
-        });
-    }
+    //     // comment作成時に、relationからcacheされたblog-postを削除、でないと新たなcommentが反映されない
+    //     static::creating(function (Comment $comment) {
+    //         // commentはuserに対するものもあるのでblog-postの時だけblog-postのキャッシュをクリア。Comment,BlogPost modelは同じnamespace上にあるのでApp\BlogPost::classは間違い
+    //         if ($comment->commentable_type === BlogPost::class) {
+    //             Cache::tags(['blog-post'])->forget("blog-post-{$comment->commentable_id}");
+    //             Cache::tags(['blog-post'])->forget('mostCommented');
+    //         }
+    //     });
+    // }
 }
