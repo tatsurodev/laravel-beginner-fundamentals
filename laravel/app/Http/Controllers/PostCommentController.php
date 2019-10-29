@@ -6,6 +6,7 @@ use App\BlogPost;
 use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreComment;
+use App\Jobs\NotifyUsersPostWasCommented;
 use App\Mail\CommentPostedMarkdown;
 use Illuminate\Support\Facades\Mail;
 
@@ -30,12 +31,14 @@ class PostCommentController extends Controller
         // );
 
         // メール送信時間を指定
-        $when = now()->addMinutes(1);
+        // $when = now()->addMinutes(1);
 
         // queueへ送る
         Mail::to($post->user)->queue(new CommentPostedMarkdown($comment));
         // later methodで時間差送信
         // Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
+
+        NotifyUsersPostWasCommented::dispatch($comment);
 
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
