@@ -32,6 +32,7 @@ class CommentPostedMarkdown extends Mailable
      */
     public function build()
     {
+        // $post = new BlogPost();
         $subject = "Commented was posted on your {$this->comment->commentable->title} blog post";
         return $this->subject($subject)->markdown('emails.posts.commented-markdown');
     }

@@ -33,9 +33,10 @@ class PostCommentController extends Controller
         $when = now()->addMinutes(1);
 
         // queueへ送る
-        // Mail::to($post->user)->queue(new CommentPostedMarkdown($comment));
+        Mail::to($post->user)->queue(new CommentPostedMarkdown($comment));
         // later methodで時間差送信
-        Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
+        // Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
+
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
     }
