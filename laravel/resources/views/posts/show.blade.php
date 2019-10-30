@@ -15,7 +15,7 @@
             {{-- type slotを渡していないのでdefault値が使用される --}}
             {{-- 現在時刻をnew Carbon\Carbon()で取得し、diffInMinutesメソッドの引数との差分が5以下ならNew!と表示 --}}
             @badge(['show' => now()->diffInMinutes($post->created_at) < 5])
-                Brand new Post!
+                {{ __('Brand new Post!') }}
             @endbadge
             {{-- slot directiveを使ってslot変数を渡す --}}
             <!--
@@ -47,15 +47,15 @@
         @updated(['date' => $post->created_at, 'name' => $post->user->name, 'userId' => $post->user->id])
         @endupdated
         @updated(['date' => $post->created_at,])
-            Updated
+            {{ __('Updated') }}
         @endupdated
 
         @tags(['tags' => $post->tags])
         @endtags
 
-        <p>Currently read by {{ $counter }} people</p>
+        <p>{{ trans_choice('messages.people.reading', $counter) }}</p>
 
-        <h4>Comments</h4>
+        <h4>{{ __('Comments') }}</h4>
 
         @commentForm(['route' => route('posts.comments.store', ['post' => $post->id])])
         @endcommentForm

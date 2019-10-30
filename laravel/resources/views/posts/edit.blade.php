@@ -5,6 +5,6 @@
         @csrf
         @method('put')
         @include('posts._form')
-        <button type="submit" class="btn btn-primary btn-block">Update!</button>
+        <button type="submit" class="btn btn-primary btn-block">{{ __('Update!') }}</button>
     </form>
 @endsection
