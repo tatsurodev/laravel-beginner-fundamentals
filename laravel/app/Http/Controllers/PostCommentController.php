@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BlogPost;
-use App\Mail\CommentPosted;
+use App\Events\CommentPosted;
+// use App\Mail\CommentPosted;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreComment;
 use App\Jobs\NotifyUsersPostWasCommented;
@@ -39,9 +40,11 @@ class PostCommentController extends Controller
         // later methodで時間差送信
         // Mail::to($post->user)->later($when, new CommentPostedMarkdown($comment));
 
-        ThrottledMail::dispatch(new CommentPostedMarkdown($comment), $post->user)->onQueue('high');
+        event(new CommentPosted($comment));
 
-        NotifyUsersPostWasCommented::dispatch($comment)->onQueue('low');
+        // CommentPosted listenerへ移動
+        // ThrottledMail::dispatch(new CommentPostedMarkdown($comment), $post->user)->onQueue('high');
+        // NotifyUsersPostWasCommented::dispatch($comment)->onQueue('low');
 
         // with('status', 'Comment was created!')とwithStatus('Comment was created!')は同値
         return redirect()->back()->withStatus('Comment was created!');
