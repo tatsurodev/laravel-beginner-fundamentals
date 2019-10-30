@@ -34,6 +34,7 @@ return [
     */
 
     'channels' => [
+        // channelsに複数のdriverを組み合わせて指定できる
         'stack' => [
             'driver' => 'stack',
             'channels' => ['daily'],
