@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Image;
 use App\BlogPost;
+use App\Events\BlogPostPosted;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePost;
 use Illuminate\Support\Facades\Gate;
@@ -163,11 +164,6 @@ class PostController extends Controller
         // create methodでmodelをdbに保存、save methodは必要なし
         $blogPost = BlogPost::create($validatedData);
 
-        // sessionでメッセージ格納
-        $request->session()->flash('status', 'Blog post was created!');
-        // 上下は同値
-        // session()->flash('status', 'Blog post was created!');
-
         if ($request->hasFile('thumbnail')) {
             // diskが指定されていないのでdefaultのpublicが使用される
             $path = $request->file('thumbnail')->store('thumbnails');
@@ -196,6 +192,13 @@ class PostController extends Controller
             );
         }
         // die;
+
+        event(new BlogPostPosted($blogPost));
+
+        // sessionでメッセージ格納
+        $request->session()->flash('status', 'Blog post was created!');
+        // 上下は同値
+        // session()->flash('status', 'Blog post was created!');
 
         return redirect()->route('posts.show', ['post' => $blogPost->id]);
         // 上下は同値
