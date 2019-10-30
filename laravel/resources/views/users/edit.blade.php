@@ -19,6 +19,15 @@
                     <label for="">{{ __('Name:') }}</label>
                     <input type="text" value="" name="name" class="form-control">
                 </div>
+                <div class="form-group">
+                    <label for="">{{ __('Language:') }}</label>
+                    <select class="form-control" name="locale">
+                        @foreach (App\User::LOCALES as $locale => $label)
+                            {{-- エルビス演算子 a ?: b --}}
+                            <option value="{{ $locale }}" {{ $user->locale !== $locale ?: 'selected' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 @errors
                 @enderrors
                 <div class="form-group">

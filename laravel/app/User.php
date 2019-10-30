@@ -12,6 +12,13 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    // profileで選択する言語、keyがdb用, valueが表示用
+    public const LOCALES = [
+        'en' => 'English',
+        'es' => 'Español',
+        'de' => 'Deutsch',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
