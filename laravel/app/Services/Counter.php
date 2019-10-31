@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Cache;
 
 class Counter
 {
+    private $timeout;
+
+    public function __construct(int $timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
     public function increment(string $key, array $tags = null): int
     {
         // session idを取得
@@ -25,7 +32,7 @@ class Counter
 
         // usersを一定時間超えていたらdiffrenceを-1、そうでなければcacheに保存する用の変数にsession idと現時間格納
         foreach ($users as $session => $lastVisit) {
-            if ($now->diffInMinutes($lastVisit) >= 1) {
+            if ($now->diffInMinutes($lastVisit) >= $this->timeout) {
                 $diffrence--;
             } else {
                 $usersUpdate[$session] = $lastVisit;
@@ -33,7 +40,7 @@ class Counter
         }
 
         // 初アクセス or アクセス済だが一定時間を超えていた場合、diffrenceを+1
-        if (!array_key_exists($sessionId, $users) || $now->diffInMinutes($users[$sessionId]) >= 1) {
+        if (!array_key_exists($sessionId, $users) || $now->diffInMinutes($users[$sessionId]) >= $this->timeout) {
             $diffrence++;
         }
 

@@ -4,12 +4,13 @@ namespace App\Providers;
 
 use App\Comment;
 use App\BlogPost;
+use App\Services\Counter;
+use App\Observers\CommentObserver;
 use App\Observers\BlogPostObserver;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\ActivityComposer;
-use App\Observers\CommentObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -51,5 +52,10 @@ class AppServiceProvider extends ServiceProvider
         // observerの登録
         BlogPost::observe(BlogPostObserver::class);
         Comment::observe(CommentObserver::class);
+
+        // service containerの登録
+        $this->app->singleton(Counter::class, function ($app) {
+            return new Counter(env('COUNTER_TIMEOUT'));
+        });
     }
 }
