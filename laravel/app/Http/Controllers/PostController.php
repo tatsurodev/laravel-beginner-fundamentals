@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Image;
 use App\BlogPost;
-use App\Services\Counter;
+use App\Contracts\CounterContract;
+// use App\Services\Counter;
 use Illuminate\Http\Request;
 use App\Events\BlogPostPosted;
 use App\Http\Requests\StorePost;
@@ -30,7 +31,7 @@ class PostController extends Controller
     private $counter;
 
     // controller内でのmiddlewareの設定
-    public function __construct(Counter $counter)
+    public function __construct(CounterContract $counter)
     {
         $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
         // $this->middleware('locale');

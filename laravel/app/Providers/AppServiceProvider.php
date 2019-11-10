@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\ActivityComposer;
+use App\Services\DummyCounter;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -63,5 +64,15 @@ class AppServiceProvider extends ServiceProvider
         });
         // bindを使ったservice containerの初期化方法
         // $this->app->when(Counter::class)->needs('$timeout')->give(env('COUNTER_TIMEOUT'));
+
+        $this->app->bind(
+            'App\Contracts\CounterContract',
+            Counter::class
+        );
+
+        // $this->app->bind(
+        //     'App\Contracts\CounterContract',
+        //     DummyCounter::class
+        // );
     }
 }
