@@ -55,7 +55,11 @@ class AppServiceProvider extends ServiceProvider
 
         // service containerの登録
         $this->app->singleton(Counter::class, function ($app) {
-            return new Counter(env('COUNTER_TIMEOUT'));
+            return new Counter(
+                $app->make('Illuminate\Contracts\Cache\Factory'),
+                $app->make('Illuminate\Contracts\Session\Session'),
+                env('COUNTER_TIMEOUT')
+            );
         });
         // bindを使ったservice containerの初期化方法
         // $this->app->when(Counter::class)->needs('$timeout')->give(env('COUNTER_TIMEOUT'));

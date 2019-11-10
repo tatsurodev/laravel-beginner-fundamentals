@@ -2,27 +2,40 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Cache;
+// use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Contracts\Session\Session;
 
 class Counter
 {
     private $timeout;
+    private $cache;
+    private $session;
+    private $supportsTags;
 
-    public function __construct(int $timeout)
+    public function __construct(Cache $cache, Session $session, int $timeout)
     {
         $this->timeout = $timeout;
+        $this->cache = $cache;
+        $this->session = $session;
+        $this->supportsTags = method_exists($cache, 'tags');
     }
 
     public function increment(string $key, array $tags = null): int
     {
+        dump($this->session);
+        dd($this->cache);
         // session idを取得
-        $sessionId = session()->getId();
+        $sessionId = $this->sesison->getId();
         // 閲覧中user数を保存するキー
         $counterKey = "{$key}-counter";
         // 閲覧中のusersを配列に保存するキー
         $usersKey = "{$key}-users";
+
+        $cache = $this->supportsTags && null !== $tags ? $this->cache->tags($tags) : $this->cache;
+
         // usersをキャッシュから復元、キーがなければ初アクセスなので空配列セット
-        $users = Cache::tags(['blog-post'])->get($usersKey, []);
+        $users = $cache->get($usersKey, []);
         // アクセスしてきたuserを保存する配列で、一定時間(この場合1分)を超えていたら削除する
         $usersUpdate = [];
         // counterの増減
@@ -48,17 +61,17 @@ class Counter
         $usersUpdate[$sessionId] = $now;
 
         // usersをcacheに保存
-        Cache::tags(['blog-post'])->forever($usersKey, $usersUpdate);
+        $cache->forever($usersKey, $usersUpdate);
 
         // counterをcacheに保存
-        if (!Cache::tags(['blog-post'])->has($counterKey)) {
-            Cache::tags(['blog-post'])->forever($counterKey, 1);
+        if (!$cache->has($counterKey)) {
+            $cache->forever($counterKey, 1);
         } else {
-            Cache::tags(['blog-post'])->increment($counterKey, $diffrence);
+            $cache->increment($counterKey, $diffrence);
         }
 
         // 現counterの値を取得
-        $counter = Cache::tags(['blog-post'])->get($counterKey);
+        $counter = $cache->get($counterKey);
 
         return $counter;
     }
