@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Image;
 use App\BlogPost;
-use App\Contracts\CounterContract;
+// use App\Contracts\CounterContract;
+use App\Facades\CounterFacade;
 // use App\Services\Counter;
 use Illuminate\Http\Request;
 use App\Events\BlogPostPosted;
@@ -28,14 +29,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    private $counter;
-
     // controller内でのmiddlewareの設定
-    public function __construct(CounterContract $counter)
+    public function __construct()
     {
         $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
         // $this->middleware('locale');
-        $this->counter = $counter;
     }
     /**
      * Display a listing of the resource.
@@ -100,7 +98,7 @@ class PostController extends Controller
         // $counter = resolve(Counter::class);
         // dd($this->counter);
 
-        return view('posts.show', ['post' => $blogPost, 'counter' => $this->counter->increment("blog-post-{$id}", ['blog-post']),]);
+        return view('posts.show', ['post' => $blogPost, 'counter' => CounterFacade::increment("blog-post-{$id}", ['blog-post']),]);
     }
 
     public function create()

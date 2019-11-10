@@ -24,10 +24,10 @@ class Counter implements CounterContract
 
     public function increment(string $key, array $tags = null): int
     {
-        dump($this->session);
-        dd($this->cache);
+        // dump($this->session);
+        // dd($this->cache);
         // session idを取得
-        $sessionId = $this->sesison->getId();
+        $sessionId = $this->session->getId();
         // 閲覧中user数を保存するキー
         $counterKey = "{$key}-counter";
         // 閲覧中のusersを配列に保存するキー
