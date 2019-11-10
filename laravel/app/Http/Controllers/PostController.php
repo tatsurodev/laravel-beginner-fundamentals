@@ -27,11 +27,14 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    private $counter;
+
     // controller内でのmiddlewareの設定
-    public function __construct()
+    public function __construct(Counter $counter)
     {
         $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
         // $this->middleware('locale');
+        $this->counter = $counter;
     }
     /**
      * Display a listing of the resource.
@@ -93,9 +96,10 @@ class PostController extends Controller
             )->findOrFail($id);
         });
 
-        $counter = resolve(Counter::class);
+        // $counter = resolve(Counter::class);
+        // dd($this->counter);
 
-        return view('posts.show', ['post' => $blogPost, 'counter' => $counter->increment("blog-post-{$id}", ['blog-post']),]);
+        return view('posts.show', ['post' => $blogPost, 'counter' => $this->counter->increment("blog-post-{$id}", ['blog-post']),]);
     }
 
     public function create()
