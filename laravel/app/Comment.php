@@ -16,7 +16,7 @@ class Comment extends Model
     protected $fillable = ['user_id', 'content'];
 
     // $hiddenでjsonで返すfieldを制限する
-    protected $hidden = ['deleted_at', 'commentable_type', 'commentable_id',];
+    protected $hidden = ['deleted_at', 'commentable_type', 'commentable_id', 'user_id',];
 
     // 子のblog_post_idと親のidの間にrelation作成
     // public function blogPost()
