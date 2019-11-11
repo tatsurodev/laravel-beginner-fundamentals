@@ -22,7 +22,8 @@ class Comment extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             // commen userのrelation用にresourceを作成、
-            'user' => new CommentUserResource($this->user),
+            // whenLoadedはuser relationがeagear loadingされていないときに取り除いてくれる、これで不要なn+1問題を避けれる
+            'user' => new CommentUserResource($this->whenLoaded('user')),
         ];
     }
 }

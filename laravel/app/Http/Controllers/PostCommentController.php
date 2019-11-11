@@ -27,7 +27,8 @@ class PostCommentController extends Controller
         // dump(get_class($post->comments));
         // die;
 
-        return CommentResource::collection($post->comments);
+        // with('relation_name')でrelationと共にeager loading
+        return CommentResource::collection($post->comments()->with('user')->get());
 
         // return $post->comments()->with('user')->get();
     }
