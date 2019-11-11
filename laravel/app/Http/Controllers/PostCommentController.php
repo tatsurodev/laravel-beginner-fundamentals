@@ -21,6 +21,10 @@ class PostCommentController extends Controller
 
     public function index(BlogPost $post)
     {
+        // ModelがArrayableを継承していることで配列→jsonが自動的に変換される
+        // dump(is_array($post->comments));
+        // dump(get_class($post->comments));
+        // die;
         return $post->comments;
     }
 
