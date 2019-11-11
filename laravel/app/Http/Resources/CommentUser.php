@@ -17,6 +17,9 @@ class CommentUser extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            // when(condition, returned value)
+            // userがadminならのemailも表示したいので、第一引数にAuth::user()->is_adminとしたいがapiでまだauthenticationを実装していないので便宜的にtrueとしておく
+            'email' => $this->when(true, $this->email),
         ];
     }
 }
