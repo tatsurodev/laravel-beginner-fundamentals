@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\BlogPost;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\Comment as CommentResource;
 
 class PostCommentController extends Controller
 {
@@ -12,9 +14,10 @@ class PostCommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    // api.v1.posts.comments.indexのroute paramとinstanceを格納する変数名を一致させる、URI api/v1/posts/{post}/comments
+    public function index(BlogPost $post)
     {
-        return response()->json(['comments' => []]);
+        return CommentResource::collection($post->comments()->with('user')->get());
     }
 
     /**

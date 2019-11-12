@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\ActivityComposer;
 use App\Services\DummyCounter;
+use App\Http\Resources\Comment as CommentResource;
+use Illuminate\Http\Resources\Json\Resource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -74,5 +76,10 @@ class AppServiceProvider extends ServiceProvider
         //     'App\Contracts\CounterContract',
         //     DummyCounter::class
         // );
+
+        // withoutWrapping methodでdata keyなしのjsonを返す
+        // CommentResource::withoutWrapping();
+        // Resource::withoutWrappingで全resource classをdata keyなしで返す
+        Resource::withoutWrapping();
     }
 }
