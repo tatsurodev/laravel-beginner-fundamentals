@@ -36,3 +36,10 @@ Route::prefix('v2')->name('api.v2.')->group(function () {
         return response()->json(['status' => true]);
     })->name('status');
 });
+
+// falback routeはfileの最後に定義
+Route::fallback(function () {
+    return response()->json([
+        'message' => 'Not found',
+    ], 404);
+})->name('api.fallback');

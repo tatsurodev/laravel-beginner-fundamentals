@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -46,6 +48,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // ModelNotFoundException: recordが見つからない等のエラー
+        if ($request->expectsJson() && $exception instanceof ModelNotFoundException) {
+            // fallback routeを返す
+            return Route::respondWithRoute('api.fallback');
+        }
         return parent::render($request, $exception);
     }
 }
