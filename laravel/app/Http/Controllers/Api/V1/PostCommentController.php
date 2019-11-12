@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Comment;
 use App\BlogPost;
 use Illuminate\Http\Request;
 use App\Events\CommentPosted;
@@ -54,9 +55,9 @@ class PostCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(BlogPost $post, Comment $comment)
     {
-        //
+        return new CommentResource($comment);
     }
 
     /**
@@ -66,9 +67,11 @@ class PostCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogPost $post, Comment $comment, StoreComment $request)
     {
-        //
+        $comment->content = $request->input('content');
+        $comment->save();
+        return new CommentResource($comment);
     }
 
     /**
@@ -77,8 +80,10 @@ class PostCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(BlogPost $post, Comment $comment)
     {
-        //
+        $comment->delete();
+        // noContent methodでHTTPステータスコードの204 No Contentを返す
+        return response()->noContent();
     }
 }
