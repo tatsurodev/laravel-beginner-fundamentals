@@ -49,11 +49,15 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    // sessionありでlaravelがuserを把握する
     protected function mapWebRoutes()
     {
+        // middleware methodで適用したいmiddleware(Kernel.phpで定義)を指定
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+            // controllerのnamespace
+            ->namespace($this->namespace)
+            // これらの設定を適用するroute fileを指定する
+            ->group(base_path('routes/web.php'));
     }
 
     /**
@@ -63,11 +67,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    // sessionなしで代わりにtoken使用、userの把握はfrontendのjs framework等に担当させる
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 }

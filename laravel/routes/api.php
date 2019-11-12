@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+// middleware('auth:api')は、auth middlewareのapi guardを使用という意味
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
