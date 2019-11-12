@@ -45,6 +45,10 @@ return [
             'driver' => 'token',
             'provider' => 'users',
             'hash' => false,
+            // apiのauthorizationで使用するquery paramを指定できる
+            // 'input_key' => 'api_token',
+            // apiのauthorizationで使用するtokenを格納するusers tableのfield名を指定できる
+            // 'storage_key' => 'api_token',
         ],
     ],
 

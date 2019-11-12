@@ -11,6 +11,11 @@ use App\Http\Resources\Comment as CommentResource;
 
 class PostCommentController extends Controller
 {
+    public function __construct()
+    {
+        // auth middlewareのapi guardを使用
+        $this->middleware('auth:api')->only(['store']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +24,7 @@ class PostCommentController extends Controller
     // api.v1.posts.comments.indexのroute paramとinstanceを格納する変数名を一致させる、URI api/v1/posts/{post}/comments
     public function index(BlogPost $post, Request $request)
     {
-        $perPage = (int) $request->input('per_page') ?? 15;
+        $perPage = $request->input('per_page') ?? 15;
         // appends methodでlinkにquery追加
         return CommentResource::collection($post->comments()->with('user')->paginate($perPage))->appends([
             'per_page' => $perPage,
@@ -39,6 +44,8 @@ class PostCommentController extends Controller
             'user_id' => $request->user()->id,
         ]);
         event(new CommentPosted($comment));
+
+        return new CommentResource($comment);
     }
 
     /**
