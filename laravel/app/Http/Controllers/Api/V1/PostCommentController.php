@@ -17,7 +17,7 @@ class PostCommentController extends Controller
     // api.v1.posts.comments.indexのroute paramとinstanceを格納する変数名を一致させる、URI api/v1/posts/{post}/comments
     public function index(BlogPost $post)
     {
-        return CommentResource::collection($post->comments()->with('user')->get());
+        return CommentResource::collection($post->comments()->with('user')->paginate(5));
     }
 
     /**
