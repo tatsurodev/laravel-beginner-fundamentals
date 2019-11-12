@@ -15,9 +15,13 @@ class PostCommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     // api.v1.posts.comments.indexのroute paramとinstanceを格納する変数名を一致させる、URI api/v1/posts/{post}/comments
-    public function index(BlogPost $post)
+    public function index(BlogPost $post, Request $request)
     {
-        return CommentResource::collection($post->comments()->with('user')->paginate(5));
+        $perPage = (int) $request->input('per_page') ?? 15;
+        // appends methodでlinkにquery追加
+        return CommentResource::collection($post->comments()->with('user')->paginate($perPage))->appends([
+            'per_page' => $perPage,
+        ]);
     }
 
     /**
