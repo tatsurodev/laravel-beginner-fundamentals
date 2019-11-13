@@ -27,9 +27,11 @@ class PostCommentController extends Controller
     {
         $perPage = $request->input('per_page') ?? 15;
         // appends methodでlinkにquery追加
-        return CommentResource::collection($post->comments()->with('user')->paginate($perPage))->appends([
-            'per_page' => $perPage,
-        ]);
+        return CommentResource::collection(
+            $post->comments()->with('user')->paginate($perPage)->appends([
+                'per_page' => $perPage,
+            ])
+        );
     }
 
     /**
