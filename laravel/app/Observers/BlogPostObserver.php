@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\BlogPost;
+use Illuminate\Support\Facades\Cache;
 
 class BlogPostObserver
 {

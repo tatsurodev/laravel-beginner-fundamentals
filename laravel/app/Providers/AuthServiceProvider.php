@@ -16,6 +16,8 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Model' => 'App\Policies\ModelPolicy',
         'App\BlogPost' => 'App\Policies\BlogPostPolicy',
         'App\User ' => 'App\Policies\UserPolicy',
+        // policy, model間のconventionに従っていれば、policyはauto discoveryされるので不要
+        // 'App\Comment' => 'App\Policies\CommentPolicy',
     ];
 
     /**
